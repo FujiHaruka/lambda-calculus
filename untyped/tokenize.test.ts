@@ -2,6 +2,10 @@ import { assertSnapshot, it } from "./testUtils.ts";
 import { tokenize } from "./tokenize.ts";
 
 [
+  "",
+  " ",
+  "x",
+  " xyz ",
   "x->x",
   "x x",
   "x -> y -> z",

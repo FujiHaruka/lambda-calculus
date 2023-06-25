@@ -1,5 +1,29 @@
 export const snapshot = {};
 
+snapshot[`tokenize "" 1`] = `[]`;
+
+snapshot[`tokenize " " 1`] = `[]`;
+
+snapshot[`tokenize "x" 1`] = `
+[
+  {
+    end: 1,
+    start: 0,
+    type: "var",
+  },
+]
+`;
+
+snapshot[`tokenize " xyz " 1`] = `
+[
+  {
+    end: 4,
+    start: 1,
+    type: "var",
+  },
+]
+`;
+
 snapshot[`tokenize "x->x" 1`] = `
 [
   {
