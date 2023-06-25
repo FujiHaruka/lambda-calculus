@@ -1,0 +1,151 @@
+export const snapshot = {};
+
+snapshot[`tokenize "x->x" 1`] = `
+[
+  {
+    end: 1,
+    start: 0,
+    type: "var",
+  },
+  {
+    end: 3,
+    start: 1,
+    type: "arrow",
+  },
+  {
+    end: 4,
+    start: 3,
+    type: "var",
+  },
+]
+`;
+
+snapshot[`tokenize "x x" 1`] = `
+[
+  {
+    end: 1,
+    start: 0,
+    type: "var",
+  },
+  {
+    end: 3,
+    start: 2,
+    type: "var",
+  },
+]
+`;
+
+snapshot[`tokenize "x -> y -> z" 1`] = `
+[
+  {
+    end: 1,
+    start: 0,
+    type: "var",
+  },
+  {
+    end: 4,
+    start: 2,
+    type: "arrow",
+  },
+  {
+    end: 6,
+    start: 5,
+    type: "var",
+  },
+  {
+    end: 9,
+    start: 7,
+    type: "arrow",
+  },
+  {
+    end: 11,
+    start: 10,
+    type: "var",
+  },
+]
+`;
+
+snapshot[`tokenize "xxx_000 -> yyy_111 -> zzz_222" 1`] = `
+[
+  {
+    end: 7,
+    start: 0,
+    type: "var",
+  },
+  {
+    end: 10,
+    start: 8,
+    type: "arrow",
+  },
+  {
+    end: 18,
+    start: 11,
+    type: "var",
+  },
+  {
+    end: 21,
+    start: 19,
+    type: "arrow",
+  },
+  {
+    end: 29,
+    start: 22,
+    type: "var",
+  },
+]
+`;
+
+snapshot[`tokenize "( x  ->  y )  ( x  ->  y )" 1`] = `
+[
+  {
+    end: 1,
+    start: 0,
+    type: "left_paren",
+  },
+  {
+    end: 3,
+    start: 2,
+    type: "var",
+  },
+  {
+    end: 7,
+    start: 5,
+    type: "arrow",
+  },
+  {
+    end: 10,
+    start: 9,
+    type: "var",
+  },
+  {
+    end: 12,
+    start: 11,
+    type: "right_paren",
+  },
+  {
+    end: 15,
+    start: 14,
+    type: "left_paren",
+  },
+  {
+    end: 17,
+    start: 16,
+    type: "var",
+  },
+  {
+    end: 21,
+    start: 19,
+    type: "arrow",
+  },
+  {
+    end: 24,
+    start: 23,
+    type: "var",
+  },
+  {
+    end: 26,
+    start: 25,
+    type: "right_paren",
+  },
+]
+`;
