@@ -11,7 +11,7 @@ const validTokens = [
 ];
 
 validTokens.forEach((token) => {
-  it(`scans ${token}`, () => {
+  it(`scans "${token}"`, () => {
     const ctx = new TokenizerContext({ code: token, position: 0 });
     const result = scanVar(ctx);
     assertEquals(result, {
@@ -26,10 +26,12 @@ const invalidTokens = [
   "1",
   "_",
   "ABC",
+  "",
+  "$",
 ];
 
 invalidTokens.forEach((token) => {
-  it(`does not scan ${token}`, () => {
+  it(`does not scan "${token}"`, () => {
     const ctx = new TokenizerContext({ code: token, position: 0 });
     const result = scanVar(ctx);
     assertEquals(result, null);
