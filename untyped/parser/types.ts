@@ -32,6 +32,29 @@ export type ApplicationNode = Readonly<{
   right: Node;
 }>;
 
+export type PartialAbstractionNode = {
+  type: "abstraction";
+  bound: string;
+  body?: Node;
+};
+
+export type PartialApplicationNode = {
+  type: "application";
+  left?: Node;
+  right?: Node;
+};
+
+export type PartialAnyNode = {
+  type: "any";
+  child?: Node;
+};
+
+export type PartialNode =
+  | VariableNode
+  | PartialAbstractionNode
+  | PartialApplicationNode
+  | PartialAnyNode;
+
 /**
  * Token in the context of parser
  */

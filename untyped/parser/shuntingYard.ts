@@ -38,6 +38,7 @@ export function shunthingYard(code: string, tokens: Token[]): ParserToken[] {
           const top = stack.pop();
           queue.push(top);
         }
+        // Pop left paren
         stack.pop();
         break;
       default:

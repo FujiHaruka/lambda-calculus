@@ -18,6 +18,10 @@ export class Stack<T> {
     return item;
   }
 
+  replaceTop(item: T): void {
+    this.#items[this.#items.length - 1] = item;
+  }
+
   push(item: T): void {
     this.#items.push(item);
   }
