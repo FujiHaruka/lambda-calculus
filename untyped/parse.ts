@@ -1,12 +1,14 @@
-import { assertNever } from "../utils.ts";
-import { Token } from "../tokenizer/types.ts";
-import { Stack } from "./Stack.ts";
-import { UnexpectedTokenError } from "./errors.ts";
-import { Node, PartialNode, VariableNode } from "./types.ts";
+import { assertNever } from "./utils.ts";
+import { Token } from "./tokenizer/types.ts";
+import { Stack } from "./parser/Stack.ts";
+import { UnexpectedTokenError } from "./parser/errors.ts";
+import { Node, PartialNode, VariableNode } from "./parser/types.ts";
+import { isNode } from "./parser/isNode.ts";
 
 export function parse(code: string, tokens: Token[]): Node {
   const value = (token: Token): string => code.slice(token.start, token.end);
   const stack = new Stack<PartialNode>();
+  let rootNode: Node | null = null;
 
   for (const token of tokens) {
     const node = stack.top();
@@ -38,9 +40,14 @@ export function parse(code: string, tokens: Token[]): Node {
             }
             case "any": {
               if (node.child) {
-                throw new UnexpectedTokenError(token, value(token));
+                stack.replaceTop({
+                  type: "application",
+                  left: node.child,
+                  right: varNode,
+                });
+              } else {
+                node.child = varNode;
               }
-              node.child = varNode;
               break;
             }
             default: {
@@ -56,6 +63,55 @@ export function parse(code: string, tokens: Token[]): Node {
           break;
         }
         case "right_paren": {
+          const popped = stack.pop();
+          if (isNode(popped)) {
+            const top = stack.top();
+            if (!top) {
+              rootNode = popped;
+              break;
+            }
+
+            switch (top.type) {
+              case "var": {
+                throw new UnexpectedTokenError(token, value(token));
+              }
+              case "abstraction": {
+                if (top.body) {
+                  throw new UnexpectedTokenError(token, value(token));
+                }
+
+                top.body = popped;
+                break;
+              }
+              case "application": {
+                if (top.right) {
+                  throw new UnexpectedTokenError(token, value(token));
+                }
+
+                top.right = popped;
+                break;
+              }
+              case "any": {
+                if (top.child) {
+                  stack.replaceTop({
+                    type: "application",
+                    left: top.child,
+                    right: popped,
+                  });
+                } else {
+                  stack.replaceTop({
+                    type: "application",
+                    left: popped,
+                  });
+                }
+              }
+            }
+          } else {
+            console.log(token);
+            console.log(stack.bump());
+            console.log(popped);
+            throw new UnexpectedTokenError(token, value(token));
+          }
           break;
         }
         case "arrow": {
@@ -77,11 +133,12 @@ export function parse(code: string, tokens: Token[]): Node {
       // First token
       switch (token.type) {
         case "var": {
-          stack.push({
+          // This is a special case where the first token is a variable.
+          // TODO: handle edge cases like there are more tokens after this one.
+          return {
             type: "var",
             identifier: value(token),
-          });
-          break;
+          };
         }
         case "left_paren": {
           stack.push({
@@ -102,14 +159,12 @@ export function parse(code: string, tokens: Token[]): Node {
     }
   }
 
-  const node = stack.pop();
   if (!stack.empty()) {
     throw new Error("Stack is not empty");
   }
-  if (node.type === "any") {
-    throw new Error("Node is still any");
+  if (!rootNode) {
+    throw new Error("Root node is null");
   }
 
-  // TODO: Check if node is not partial
-  return node as Node;
+  return rootNode;
 }

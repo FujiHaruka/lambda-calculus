@@ -40,7 +40,7 @@ export type PartialAbstractionNode = {
 
 export type PartialApplicationNode = {
   type: "application";
-  left?: Node;
+  left: Node;
   right?: Node;
 };
 
