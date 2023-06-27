@@ -78,60 +78,61 @@ export function parse(code: string, tokens: Token[]): Node {
           throw new UnexpectedTokenError(token, value(token));
         }
 
+        // Popped node is expected to be a complete node, not a partial one.
+        // e.g. In the second right parenthesis in "((a b) c)", the popped node is "a b" and it's a complete node of type "application".
         const popped = stack.pop();
-        if (isNode(popped)) {
-          const top = stack.top();
-          if (!top) {
-            // Empty stack means we are done parsing
-            rootNode = popped;
-            break;
-          }
+        if (!isNode(popped)) {
+          throw new UnexpectedTokenError(token, value(token));
+        }
 
-          switch (top.type) {
-            case "var": {
+        const top = stack.top();
+        if (!top) {
+          // Empty stack means we are done parsing
+          rootNode = popped;
+          break;
+        }
+
+        switch (top.type) {
+          case "var": {
+            throw new UnexpectedTokenError(token, value(token));
+          }
+          case "abstraction": {
+            if (top.body) {
               throw new UnexpectedTokenError(token, value(token));
             }
-            case "abstraction": {
-              if (top.body) {
-                throw new UnexpectedTokenError(token, value(token));
-              }
 
-              top.body = popped;
-              break;
+            top.body = popped;
+            break;
+          }
+          case "application": {
+            if (top.right) {
+              throw new UnexpectedTokenError(token, value(token));
             }
-            case "application": {
-              if (top.right) {
-                throw new UnexpectedTokenError(token, value(token));
-              }
 
-              top.right = popped;
-              break;
-            }
-            case "any": {
-              if (top.child) {
-                stack.replaceTop({
-                  type: "application",
-                  left: top.child,
-                  right: popped,
-                });
-              } else {
-                stack.replaceTop({
-                  type: "application",
-                  left: popped,
-                });
-              }
+            top.right = popped;
+            break;
+          }
+          case "any": {
+            if (top.child) {
+              stack.replaceTop({
+                type: "application",
+                left: top.child,
+                right: popped,
+              });
+            } else {
+              stack.replaceTop({
+                type: "application",
+                left: popped,
+              });
             }
           }
-        } else {
-          throw new UnexpectedTokenError(token, value(token));
         }
         break;
       }
       case "arrow": {
-        if (!node) {
-          throw new UnexpectedTokenError(token, value(token));
-        }
-        if (node.type === "any" && node.child && node.child.type === "var") {
+        if (
+          node && node.type === "any" && node.child && node.child.type === "var"
+        ) {
           stack.replaceTop({
             type: "abstraction",
             bound: node.child.identifier,
