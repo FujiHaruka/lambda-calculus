@@ -50,7 +50,6 @@ export type PartialAnyNode = {
 };
 
 export type PlainPartialNode =
-  | VariableNode
   | PartialAbstractionNode
   | PartialApplicationNode
   | PartialAnyNode;

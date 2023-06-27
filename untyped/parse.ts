@@ -34,9 +34,6 @@ export function parse(code: string): Node {
           identifier: value(token),
         };
         switch (node.type) {
-          case "var": {
-            throw new UnexpectedTokenError(token, value(token));
-          }
           case "abstraction":
           case "application": {
             if (node.hasChild()) {
@@ -87,9 +84,6 @@ export function parse(code: string): Node {
         }
 
         switch (top.type) {
-          case "var": {
-            throw new UnexpectedTokenError(token, value(token));
-          }
           case "abstraction":
           case "application": {
             if (top.hasChild()) {
