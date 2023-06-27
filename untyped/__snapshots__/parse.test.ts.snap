@@ -33,6 +33,25 @@ snapshot[`parse "(x -> (y -> z))" 1`] = `
 }
 `;
 
+snapshot[`parse "(x -> (y -> (z -> abc)))" 1`] = `
+{
+  body: {
+    body: {
+      body: {
+        identifier: "abc",
+        type: "var",
+      },
+      bound: "z",
+      type: "abstraction",
+    },
+    bound: "y",
+    type: "abstraction",
+  },
+  bound: "x",
+  type: "abstraction",
+}
+`;
+
 snapshot[`parse "(x y)" 1`] = `
 {
   left: {

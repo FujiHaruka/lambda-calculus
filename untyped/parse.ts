@@ -76,21 +76,18 @@ export function parse(code: string): Node {
         break;
       }
       case "right_paren": {
-        if (!node) {
+        // The top node is expected to be a complete node, not a partial one.
+        // e.g. In the second right parenthesis in "((a b) c)", the top node is "a b" and it's a complete node of type "application".
+        if (!node || !isNode(node)) {
           throw new UnexpectedTokenError(token, value(token));
         }
 
-        // Popped node is expected to be a complete node, not a partial one.
-        // e.g. In the second right parenthesis in "((a b) c)", the popped node is "a b" and it's a complete node of type "application".
-        const popped = stack.pop();
-        if (!isNode(popped)) {
-          throw new UnexpectedTokenError(token, value(token));
-        }
+        stack.pop();
 
         const top = stack.top();
         if (!top) {
           // Empty stack means we are done parsing
-          rootNode = popped;
+          rootNode = node;
           break;
         }
 
@@ -103,7 +100,7 @@ export function parse(code: string): Node {
               throw new UnexpectedTokenError(token, value(token));
             }
 
-            top.body = popped;
+            top.body = node;
             break;
           }
           case "application": {
@@ -111,7 +108,7 @@ export function parse(code: string): Node {
               throw new UnexpectedTokenError(token, value(token));
             }
 
-            top.right = popped;
+            top.right = node;
             break;
           }
           case "any": {
@@ -119,12 +116,12 @@ export function parse(code: string): Node {
               stack.replaceTop({
                 type: "application",
                 left: top.child,
-                right: popped,
+                right: node,
               });
             } else {
               stack.replaceTop({
                 type: "application",
-                left: popped,
+                left: node,
               });
             }
           }
