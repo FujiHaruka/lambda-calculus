@@ -49,7 +49,7 @@ export type PartialAnyNode = {
   child?: Node;
 };
 
-export type PartialNode =
+export type PlainPartialNode =
   | VariableNode
   | PartialAbstractionNode
   | PartialApplicationNode

@@ -5,9 +5,9 @@ import {
   ParenthesisNotClosedError,
   UnexpectedTokenError,
 } from "./parser/errors.ts";
-import { Node, PartialNode, VariableNode } from "./parser/types.ts";
-import { isNode } from "./parser/isNode.ts";
+import { Node, VariableNode } from "./parser/types.ts";
 import { tokenize } from "./tokenize.ts";
+import { PartialNode } from "./parser/PartialNode.ts";
 
 export function parse(code: string): Node {
   const tokens = tokenize(code);
@@ -37,48 +37,43 @@ export function parse(code: string): Node {
           case "var": {
             throw new UnexpectedTokenError(token, value(token));
           }
-          case "abstraction": {
-            if (isNode(node)) {
-              throw new UnexpectedTokenError(token, value(token));
-            }
-            node.body = varNode;
-            break;
-          }
+          case "abstraction":
           case "application": {
-            if (isNode(node)) {
+            if (node.hasChild()) {
               throw new UnexpectedTokenError(token, value(token));
             }
-            node.right = varNode;
+            node.setChild(varNode);
             break;
           }
           case "any": {
-            if (node.child) {
-              stack.replaceTop({
+            if (node.hasChild()) {
+              node.evolve({
                 type: "application",
-                left: node.child,
+                left: node.child!,
                 right: varNode,
               });
             } else {
-              node.child = varNode;
+              node.setChild(varNode);
             }
             break;
           }
           default: {
-            assertNever(node);
+            assertNever(node.type);
           }
         }
         break;
       }
       case "left_paren": {
-        stack.push({
+        const nextNode = new PartialNode({
           type: "any",
         });
+        stack.push(nextNode);
         break;
       }
       case "right_paren": {
         // The top node is expected to be a complete node, not a partial one.
         // e.g. In the second right parenthesis in "((a b) c)", the top node is "a b" and it's a complete node of type "application".
-        if (!node || !isNode(node)) {
+        if (!node || node.isImcompleteNode()) {
           throw new UnexpectedTokenError(token, value(token));
         }
 
@@ -87,7 +82,7 @@ export function parse(code: string): Node {
         const top = stack.top();
         if (!top) {
           // Empty stack means we are done parsing
-          rootNode = node;
+          rootNode = node.toNode();
           break;
         }
 
@@ -95,33 +90,26 @@ export function parse(code: string): Node {
           case "var": {
             throw new UnexpectedTokenError(token, value(token));
           }
-          case "abstraction": {
-            if (top.body) {
-              throw new UnexpectedTokenError(token, value(token));
-            }
-
-            top.body = node;
-            break;
-          }
+          case "abstraction":
           case "application": {
-            if (top.right) {
+            if (top.hasChild()) {
               throw new UnexpectedTokenError(token, value(token));
             }
 
-            top.right = node;
+            top.setChild(node.toNode());
             break;
           }
           case "any": {
-            if (top.child) {
-              stack.replaceTop({
+            if (top.hasChild()) {
+              top.evolve({
                 type: "application",
-                left: top.child,
-                right: node,
+                left: top.child!,
+                right: node.toNode(),
               });
             } else {
-              stack.replaceTop({
+              top.evolve({
                 type: "application",
-                left: node,
+                left: node.toNode(),
               });
             }
           }
@@ -132,7 +120,7 @@ export function parse(code: string): Node {
         if (
           node && node.type === "any" && node.child && node.child.type === "var"
         ) {
-          stack.replaceTop({
+          node.evolve({
             type: "abstraction",
             bound: node.child.identifier,
           });
