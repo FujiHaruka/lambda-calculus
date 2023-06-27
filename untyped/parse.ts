@@ -7,8 +7,10 @@ import {
 } from "./parser/errors.ts";
 import { Node, PartialNode, VariableNode } from "./parser/types.ts";
 import { isNode } from "./parser/isNode.ts";
+import { tokenize } from "./tokenize.ts";
 
-export function parse(code: string, tokens: Token[]): Node {
+export function parse(code: string): Node {
+  const tokens = tokenize(code);
   const value = (token: Token): string => code.slice(token.start, token.end);
   const stack = new Stack<PartialNode>();
   let rootNode: Node | null = null;

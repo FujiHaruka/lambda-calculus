@@ -1,6 +1,5 @@
 import { parse } from "./parse.ts";
 import { assertSnapshot, assertThrows, it } from "./testUtils.ts";
-import { tokenize } from "./tokenize.ts";
 
 [
   "x",
@@ -16,8 +15,7 @@ import { tokenize } from "./tokenize.ts";
   "((((x -> (y -> (z -> ((x z) (y z))))) a) (x -> (y -> x))) c)",
 ].forEach((code) => {
   it(`parse "${code}"`, async (t) => {
-    const tokens = tokenize(code);
-    await assertSnapshot(t, parse(code, tokens));
+    await assertSnapshot(t, parse(code));
   });
 });
 
@@ -29,8 +27,7 @@ import { tokenize } from "./tokenize.ts";
   "((x y) -> (x y))",
 ].forEach((code) => {
   it(`throws UnexpectedTokenError for "${code}"`, () => {
-    const tokens = tokenize(code);
-    assertThrows(() => parse(code, tokens));
+    assertThrows(() => parse(code));
   });
 });
 
@@ -40,7 +37,6 @@ import { tokenize } from "./tokenize.ts";
   "((x y) z",
 ].forEach((code) => {
   it(`throws ParenthesisNotClosedError for "${code}"`, () => {
-    const tokens = tokenize(code);
-    assertThrows(() => parse(code, tokens));
+    assertThrows(() => parse(code));
   });
 });
