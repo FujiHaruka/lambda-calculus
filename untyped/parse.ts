@@ -36,14 +36,14 @@ export function parse(code: string, tokens: Token[]): Node {
             throw new UnexpectedTokenError(token, value(token));
           }
           case "abstraction": {
-            if (node.body) {
+            if (isNode(node)) {
               throw new UnexpectedTokenError(token, value(token));
             }
             node.body = varNode;
             break;
           }
           case "application": {
-            if (node.right) {
+            if (isNode(node)) {
               throw new UnexpectedTokenError(token, value(token));
             }
             node.right = varNode;
