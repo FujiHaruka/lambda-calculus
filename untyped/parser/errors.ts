@@ -7,3 +7,9 @@ export class UnexpectedTokenError extends ParserError {
     super(`Unexpected token: "${value}" at position ${token.start}`);
   }
 }
+
+export class ParenthesisNotClosedError extends ParserError {
+  constructor() {
+    super(`Parenthesis not closed at the end of the input`);
+  }
+}

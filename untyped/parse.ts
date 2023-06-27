@@ -1,7 +1,10 @@
 import { assertNever } from "./utils.ts";
 import { Token } from "./tokenizer/types.ts";
 import { Stack } from "./parser/Stack.ts";
-import { UnexpectedTokenError } from "./parser/errors.ts";
+import {
+  ParenthesisNotClosedError,
+  UnexpectedTokenError,
+} from "./parser/errors.ts";
 import { Node, PartialNode, VariableNode } from "./parser/types.ts";
 import { isNode } from "./parser/isNode.ts";
 
@@ -13,123 +16,9 @@ export function parse(code: string, tokens: Token[]): Node {
   for (const token of tokens) {
     const node = stack.top();
 
-    if (node) {
-      switch (token.type) {
-        case "var": {
-          const varNode: VariableNode = {
-            type: "var",
-            identifier: value(token),
-          };
-          switch (node.type) {
-            case "var": {
-              throw new UnexpectedTokenError(token, value(token));
-            }
-            case "abstraction": {
-              if (node.body) {
-                throw new UnexpectedTokenError(token, value(token));
-              }
-              node.body = varNode;
-              break;
-            }
-            case "application": {
-              if (node.right) {
-                throw new UnexpectedTokenError(token, value(token));
-              }
-              node.right = varNode;
-              break;
-            }
-            case "any": {
-              if (node.child) {
-                stack.replaceTop({
-                  type: "application",
-                  left: node.child,
-                  right: varNode,
-                });
-              } else {
-                node.child = varNode;
-              }
-              break;
-            }
-            default: {
-              assertNever(node);
-            }
-          }
-          break;
-        }
-        case "left_paren": {
-          stack.push({
-            type: "any",
-          });
-          break;
-        }
-        case "right_paren": {
-          const popped = stack.pop();
-          if (isNode(popped)) {
-            const top = stack.top();
-            if (!top) {
-              rootNode = popped;
-              break;
-            }
-
-            switch (top.type) {
-              case "var": {
-                throw new UnexpectedTokenError(token, value(token));
-              }
-              case "abstraction": {
-                if (top.body) {
-                  throw new UnexpectedTokenError(token, value(token));
-                }
-
-                top.body = popped;
-                break;
-              }
-              case "application": {
-                if (top.right) {
-                  throw new UnexpectedTokenError(token, value(token));
-                }
-
-                top.right = popped;
-                break;
-              }
-              case "any": {
-                if (top.child) {
-                  stack.replaceTop({
-                    type: "application",
-                    left: top.child,
-                    right: popped,
-                  });
-                } else {
-                  stack.replaceTop({
-                    type: "application",
-                    left: popped,
-                  });
-                }
-              }
-            }
-          } else {
-            throw new UnexpectedTokenError(token, value(token));
-          }
-          break;
-        }
-        case "arrow": {
-          if (node.type === "any" && node.child && node.child.type === "var") {
-            stack.replaceTop({
-              type: "abstraction",
-              bound: node.child.identifier,
-            });
-          } else {
-            throw new UnexpectedTokenError(token, value(token));
-          }
-          break;
-        }
-        default: {
-          assertNever(token.type);
-        }
-      }
-    } else {
-      // First token
-      switch (token.type) {
-        case "var": {
+    switch (token.type) {
+      case "var": {
+        if (!node) {
           // This is a special case where the first token is a variable.
           // TODO: handle edge cases like there are more tokens after this one.
           return {
@@ -137,29 +26,132 @@ export function parse(code: string, tokens: Token[]): Node {
             identifier: value(token),
           };
         }
-        case "left_paren": {
-          stack.push({
-            type: "any",
+
+        const varNode: VariableNode = {
+          type: "var",
+          identifier: value(token),
+        };
+        switch (node.type) {
+          case "var": {
+            throw new UnexpectedTokenError(token, value(token));
+          }
+          case "abstraction": {
+            if (node.body) {
+              throw new UnexpectedTokenError(token, value(token));
+            }
+            node.body = varNode;
+            break;
+          }
+          case "application": {
+            if (node.right) {
+              throw new UnexpectedTokenError(token, value(token));
+            }
+            node.right = varNode;
+            break;
+          }
+          case "any": {
+            if (node.child) {
+              stack.replaceTop({
+                type: "application",
+                left: node.child,
+                right: varNode,
+              });
+            } else {
+              node.child = varNode;
+            }
+            break;
+          }
+          default: {
+            assertNever(node);
+          }
+        }
+        break;
+      }
+      case "left_paren": {
+        stack.push({
+          type: "any",
+        });
+        break;
+      }
+      case "right_paren": {
+        if (!node) {
+          throw new UnexpectedTokenError(token, value(token));
+        }
+
+        const popped = stack.pop();
+        if (isNode(popped)) {
+          const top = stack.top();
+          if (!top) {
+            // Empty stack means we are done parsing
+            rootNode = popped;
+            break;
+          }
+
+          switch (top.type) {
+            case "var": {
+              throw new UnexpectedTokenError(token, value(token));
+            }
+            case "abstraction": {
+              if (top.body) {
+                throw new UnexpectedTokenError(token, value(token));
+              }
+
+              top.body = popped;
+              break;
+            }
+            case "application": {
+              if (top.right) {
+                throw new UnexpectedTokenError(token, value(token));
+              }
+
+              top.right = popped;
+              break;
+            }
+            case "any": {
+              if (top.child) {
+                stack.replaceTop({
+                  type: "application",
+                  left: top.child,
+                  right: popped,
+                });
+              } else {
+                stack.replaceTop({
+                  type: "application",
+                  left: popped,
+                });
+              }
+            }
+          }
+        } else {
+          throw new UnexpectedTokenError(token, value(token));
+        }
+        break;
+      }
+      case "arrow": {
+        if (!node) {
+          throw new UnexpectedTokenError(token, value(token));
+        }
+        if (node.type === "any" && node.child && node.child.type === "var") {
+          stack.replaceTop({
+            type: "abstraction",
+            bound: node.child.identifier,
           });
-          break;
-        }
-        case "right_paren": {
+        } else {
           throw new UnexpectedTokenError(token, value(token));
         }
-        case "arrow": {
-          throw new UnexpectedTokenError(token, value(token));
-        }
-        default: {
-          assertNever(token.type);
-        }
+        break;
+      }
+      default: {
+        assertNever(token.type);
       }
     }
   }
 
   if (!stack.empty()) {
-    throw new Error("Stack is not empty");
+    throw new ParenthesisNotClosedError();
   }
   if (!rootNode) {
+    // This should never happen
     throw new Error("Root node is null");
   }
 
