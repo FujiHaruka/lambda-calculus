@@ -107,9 +107,6 @@ export function parse(code: string, tokens: Token[]): Node {
               }
             }
           } else {
-            console.log(token);
-            console.log(stack.bump());
-            console.log(popped);
             throw new UnexpectedTokenError(token, value(token));
           }
           break;
