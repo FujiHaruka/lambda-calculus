@@ -21,12 +21,8 @@ export function parse(code: string): Node {
     switch (token.type) {
       case "var": {
         if (!node) {
-          // This is a special case where the first token is a variable.
-          // TODO: handle edge cases like there are more tokens after this one.
-          return {
-            type: "var",
-            identifier: value(token),
-          };
+          // For now, we don't support a variable as a top-level node.
+          throw new UnexpectedTokenError(token, value(token));
         }
 
         const varNode: VariableNode = {

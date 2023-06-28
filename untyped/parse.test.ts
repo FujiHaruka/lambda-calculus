@@ -2,7 +2,6 @@ import { parse } from "./parse.ts";
 import { assertSnapshot, assertThrows, it } from "./testUtils.ts";
 
 [
-  "x",
   "(x -> y)",
   "(x -> (y -> z))",
   "(x -> (y -> (z -> abc)))",

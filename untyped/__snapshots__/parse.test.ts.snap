@@ -1,12 +1,5 @@
 export const snapshot = {};
 
-snapshot[`parse "x" 1`] = `
-{
-  identifier: "x",
-  type: "var",
-}
-`;
-
 snapshot[`parse "(x -> y)" 1`] = `
 {
   body: {
