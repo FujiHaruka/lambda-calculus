@@ -18,77 +18,60 @@ export function parse(code: string): Node {
   for (const token of tokens) {
     const node = stack.top();
 
-    switch (token.type) {
-      case "var": {
-        if (!node) {
-          // For now, we don't support a variable as a top-level node.
-          throw new UnexpectedTokenError(token, value(token));
-        }
-
-        const varNode: VariableNode = {
-          type: "var",
-          identifier: value(token),
-        };
-        switch (node.type) {
-          case "abstraction":
-          case "application": {
-            if (node.hasChild()) {
-              throw new UnexpectedTokenError(token, value(token));
-            }
-            // When the top node is imcomplete abstraction/application, set the var node as its child and evolve it to a complete node.
-            // e.g.
-            // "(a ->" + "b"
-            // "((a b)" + "c"
-            node.setChild(varNode);
-            break;
-          }
-          case "any": {
-            if (node.hasChild()) {
-              // When the top node is single-childed any node, evolve it to an application node.
-              // e.g.
-              // "(a" + "b"
-              node.evolve({
-                type: "application",
-                left: node.child!,
-                right: varNode,
-              });
-            } else {
-              // When the top node is empty any node, set the var node as its child.
-              // e.g.
-              // "(" + "a"
-              node.setChild(varNode);
-            }
-            break;
-          }
-          default: {
-            assertNever(node.type);
-          }
-        }
-        break;
-      }
-      case "left_paren": {
-        const nextNode = new PartialNode({
-          type: "any",
-        });
-        stack.push(nextNode);
-        break;
-      }
-      case "right_paren": {
-        // The top node is expected to be a complete node, not a partial one.
-        // e.g. In the second right parenthesis in "((a b) c)", the top node is "a b" and it's a complete node of type "application".
-        if (!node || node.isImcompleteNode()) {
-          throw new UnexpectedTokenError(token, value(token));
-        }
-
-        // Pop and modify the top in stack because both abstractions and applications are kind of binary operators.
-        stack.pop();
-        const top = stack.top();
-        if (!top) {
-          // Empty stack means we are done parsing
-          rootNode = node.toNode();
-          break;
-        }
-
+    if (
+      // e.g.
+      // "(" + "a"
+      // "(a ->" + "b"
+      // "((a b)" + "c"
+      token.type === "var" &&
+      node &&
+      !node.hasChild()
+    ) {
+      const varNode: VariableNode = {
+        type: "var",
+        identifier: value(token),
+      };
+      node.setChild(varNode);
+    } else if (
+      // e.g.
+      // "(a" + "b"
+      token.type === "var" &&
+      node &&
+      node.type === "any" &&
+      node.hasChild()
+    ) {
+      const varNode: VariableNode = {
+        type: "var",
+        identifier: value(token),
+      };
+      node.evolve({
+        type: "application",
+        left: node.child!,
+        right: varNode,
+      });
+    } else if (
+      // e.g.
+      // "("
+      token.type === "left_paren"
+    ) {
+      const nextNode = new PartialNode({
+        type: "any",
+      });
+      stack.push(nextNode);
+    } else if (
+      // e.g.
+      // TODO
+      token.type === "right_paren" &&
+      node &&
+      node.isNode()
+    ) {
+      // Pop and modify the top in stack because both abstractions and applications are kind of binary operators.
+      stack.pop();
+      const top = stack.top();
+      if (!top) {
+        // Empty stack means we are done parsing
+        rootNode = node.toNode();
+      } else {
         switch (top.type) {
           case "abstraction":
           case "application": {
@@ -114,27 +97,19 @@ export function parse(code: string): Node {
             }
           }
         }
-        break;
       }
-      case "arrow": {
-        if (
-          node && node.type === "any" && node.child && node.child.type === "var"
-        ) {
-          // When the top node is a single-childed any node and its child is a var node, evolve it to an abstraction node.
-          // e.g.
-          // "(a" + "->"
-          node.evolve({
-            type: "abstraction",
-            bound: node.child.identifier,
-          });
-        } else {
-          throw new UnexpectedTokenError(token, value(token));
-        }
-        break;
-      }
-      default: {
-        assertNever(token.type);
-      }
+    } else if (
+      // e.g.
+      // "(a" + "->"
+      token.type === "arrow" &&
+      node && node.type === "any" && node.child && node.child.type === "var"
+    ) {
+      node.evolve({
+        type: "abstraction",
+        bound: node.child.identifier,
+      });
+    } else {
+      throw new UnexpectedTokenError(token, value(token));
     }
   }
 
