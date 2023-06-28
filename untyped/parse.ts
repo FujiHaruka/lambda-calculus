@@ -1,4 +1,3 @@
-import { assertNever } from "./utils.ts";
 import { Token } from "./tokenizer/types.ts";
 import { Stack } from "./parser/Stack.ts";
 import {
