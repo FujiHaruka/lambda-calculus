@@ -35,17 +35,27 @@ export function parse(code: string): Node {
             if (node.hasChild()) {
               throw new UnexpectedTokenError(token, value(token));
             }
+            // When the top node is imcomplete abstraction/application, set the var node as its child and evolve it to a complete node.
+            // e.g.
+            // "(a ->" + "b"
+            // "((a b)" + "c"
             node.setChild(varNode);
             break;
           }
           case "any": {
             if (node.hasChild()) {
+              // When the top node is single-childed any node, evolve it to an application node.
+              // e.g.
+              // "(a" + "b"
               node.evolve({
                 type: "application",
                 left: node.child!,
                 right: varNode,
               });
             } else {
+              // When the top node is empty any node, set the var node as its child.
+              // e.g.
+              // "(" + "a"
               node.setChild(varNode);
             }
             break;
@@ -70,8 +80,8 @@ export function parse(code: string): Node {
           throw new UnexpectedTokenError(token, value(token));
         }
 
+        // Pop and modify the top in stack because both abstractions and applications are kind of binary operators.
         stack.pop();
-
         const top = stack.top();
         if (!top) {
           // Empty stack means we are done parsing
@@ -110,6 +120,9 @@ export function parse(code: string): Node {
         if (
           node && node.type === "any" && node.child && node.child.type === "var"
         ) {
+          // When the top node is a single-childed any node and its child is a var node, evolve it to an abstraction node.
+          // e.g.
+          // "(a" + "->"
           node.evolve({
             type: "abstraction",
             bound: node.child.identifier,
