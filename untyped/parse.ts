@@ -60,7 +60,8 @@ export function parse(code: string): Node {
       stack.push(nextNode);
     } else if (
       // e.g.
-      // TODO
+      // "(a -> b" + ")"
+      // "((a b) c" + ")"
       token.type === "right_paren" &&
       node &&
       node.isNode()
