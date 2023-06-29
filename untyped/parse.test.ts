@@ -13,6 +13,12 @@ import { assertSnapshot, assertThrows, it } from "./testUtils.ts";
   "((x -> (y -> x)) y)",
   "(x ((y -> x) (a -> b)))",
   "((((x -> (y -> (z -> ((x z) (y z))))) a) (x -> (y -> x))) c)",
+  // You can omit top-level parentheses.
+  "x -> y",
+  "x y",
+  "(x y) z",
+  "x (y z)",
+  "x -> (y -> z)",
 ].forEach((code) => {
   it(`parse "${code}"`, async (t) => {
     await assertSnapshot(t, parse(code));
@@ -25,6 +31,9 @@ import { assertSnapshot, assertThrows, it } from "./testUtils.ts";
   "(x -> -> y)",
   "(x y))",
   "((x y) -> (x y))",
+  "x -> y)",
+  "x y)",
+  "x (y z))",
 ].forEach((code) => {
   it(`throws UnexpectedTokenError for "${code}"`, () => {
     assertThrows(() => parse(code));

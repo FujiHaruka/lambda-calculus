@@ -33,6 +33,22 @@ export function parse(code: string): Node {
       node.setChild(varNode);
     } else if (
       // e.g.
+      // "" + "a"
+      token.type === "var" &&
+      !node
+    ) {
+      const nextNode = new PartialNode({
+        type: "any",
+        child: {
+          type: "var",
+          identifier: value(token),
+        },
+      }, {
+        startsWithLeftParen: false,
+      });
+      stack.push(nextNode);
+    } else if (
+      // e.g.
       // "(a" + "b"
       token.type === "var" &&
       node &&
@@ -55,6 +71,8 @@ export function parse(code: string): Node {
     ) {
       const nextNode = new PartialNode({
         type: "any",
+      }, {
+        startsWithLeftParen: true,
       });
       stack.push(nextNode);
     } else if (
@@ -113,12 +131,19 @@ export function parse(code: string): Node {
     }
   }
 
+  if (!rootNode && !stack.empty()) {
+    const node = stack.pop();
+    if (!node.startsWithLeftParen) {
+      rootNode = node.toNode();
+    }
+  }
+
   if (!stack.empty()) {
     throw new ParenthesisNotClosedError();
   }
+
   if (!rootNode) {
-    // This should never happen
-    throw new Error("Root node is null");
+    throw new Error("Unexpected error");
   }
 
   return rootNode;

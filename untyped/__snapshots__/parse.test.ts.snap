@@ -288,3 +288,64 @@ snapshot[`parse "((((x -> (y -> (z -> ((x z) (y z))))) a) (x -> (y -> x))) c)" 1
   type: "application",
 }
 `;
+
+snapshot[`parse "x -> y" 1`] = `
+{
+  body: {
+    identifier: "y",
+    type: "var",
+  },
+  bound: "x",
+  type: "abstraction",
+}
+`;
+
+snapshot[`parse "x y" 1`] = `
+{
+  left: {
+    identifier: "x",
+    type: "var",
+  },
+  right: {
+    identifier: "y",
+    type: "var",
+  },
+  type: "application",
+}
+`;
+
+snapshot[`parse "x (y z)" 1`] = `
+{
+  left: {
+    identifier: "x",
+    type: "var",
+  },
+  right: {
+    left: {
+      identifier: "y",
+      type: "var",
+    },
+    right: {
+      identifier: "z",
+      type: "var",
+    },
+    type: "application",
+  },
+  type: "application",
+}
+`;
+
+snapshot[`parse "x -> (y -> z)" 1`] = `
+{
+  body: {
+    body: {
+      identifier: "z",
+      type: "var",
+    },
+    bound: "y",
+    type: "abstraction",
+  },
+  bound: "x",
+  type: "abstraction",
+}
+`;
