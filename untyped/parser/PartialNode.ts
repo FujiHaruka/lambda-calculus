@@ -26,6 +26,13 @@ export class PartialNode {
       (node.type === "application" && !node.right);
   }
 
+  isComplete(): boolean {
+    return this.isNode() && (
+      (this.leftParen && this.rightParen) ||
+      (!this.leftParen && !this.rightParen)
+    );
+  }
+
   hasChild(): boolean {
     const { node } = this;
     return Boolean(

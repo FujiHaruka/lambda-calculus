@@ -239,9 +239,7 @@ export function parse(code: string): Node {
       // "(a -> b)" + "EOF"
       token.type === "eof" &&
       node &&
-      node.isNode() &&
-      ((node.leftParen && node.rightParen) ||
-        (!node.leftParen && !node.rightParen))
+      node.isComplete()
     ) {
       return node.toNode();
     } else if (
@@ -249,9 +247,7 @@ export function parse(code: string): Node {
       // "(a -> b" + "EOF"
       token.type === "eof" &&
       node &&
-      !node.isNode() &&
-      ((!node.leftParen && node.rightParen) ||
-        (node.leftParen && !node.rightParen))
+      !node.isNode()
     ) {
       throw new ParenthesisNotClosedError();
     } else {
