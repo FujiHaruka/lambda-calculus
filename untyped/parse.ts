@@ -65,6 +65,27 @@ export function parse(code: string): Node {
       });
     } else if (
       // e.g.
+      // "(a b)" + "c"
+      token.type === "var" &&
+      node &&
+      node.type === "application" &&
+      node.isNode() &&
+      node.rightParen
+    ) {
+      stack.pop();
+      const nextNode = new PartialNode({
+        type: "application",
+        left: node.toNode(),
+        right: {
+          type: "var",
+          identifier: value(token),
+        },
+      }, {
+        leftParen: false,
+      });
+      stack.push(nextNode);
+    } else if (
+      // e.g.
       // "("
       token.type === "left_paren"
     ) {

@@ -314,6 +314,27 @@ snapshot[`parse "x y" 1`] = `
 }
 `;
 
+snapshot[`parse "(x y) z" 1`] = `
+{
+  left: {
+    left: {
+      identifier: "x",
+      type: "var",
+    },
+    right: {
+      identifier: "y",
+      type: "var",
+    },
+    type: "application",
+  },
+  right: {
+    identifier: "z",
+    type: "var",
+  },
+  type: "application",
+}
+`;
+
 snapshot[`parse "x (y z)" 1`] = `
 {
   left: {
