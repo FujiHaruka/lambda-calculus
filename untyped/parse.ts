@@ -86,6 +86,30 @@ export function parse(code: string): Node {
       stack.push(nextNode);
     } else if (
       // e.g.
+      // "(a b)" + "("
+      token.type === "left_paren" &&
+      node &&
+      node.type === "application" &&
+      node.isNode() &&
+      node.rightParen
+    ) {
+      stack.pop();
+      const nextNode = new PartialNode({
+        type: "application",
+        left: node.toNode(),
+      }, {
+        leftParen: false,
+      });
+      stack.push(nextNode);
+
+      const nextAnyNode = new PartialNode({
+        type: "any",
+      }, {
+        leftParen: true,
+      });
+      stack.push(nextAnyNode);
+    } else if (
+      // e.g.
       // "("
       token.type === "left_paren"
     ) {

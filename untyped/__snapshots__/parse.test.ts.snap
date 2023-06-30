@@ -335,6 +335,59 @@ snapshot[`parse "(x y) z" 1`] = `
 }
 `;
 
+snapshot[`parse "(x y) (z w)" 1`] = `
+{
+  left: {
+    left: {
+      identifier: "x",
+      type: "var",
+    },
+    right: {
+      identifier: "y",
+      type: "var",
+    },
+    type: "application",
+  },
+  right: {
+    left: {
+      identifier: "z",
+      type: "var",
+    },
+    right: {
+      identifier: "w",
+      type: "var",
+    },
+    type: "application",
+  },
+  type: "application",
+}
+`;
+
+snapshot[`parse "(x y) (z -> w)" 1`] = `
+{
+  left: {
+    left: {
+      identifier: "x",
+      type: "var",
+    },
+    right: {
+      identifier: "y",
+      type: "var",
+    },
+    type: "application",
+  },
+  right: {
+    body: {
+      identifier: "w",
+      type: "var",
+    },
+    bound: "z",
+    type: "abstraction",
+  },
+  type: "application",
+}
+`;
+
 snapshot[`parse "x (y z)" 1`] = `
 {
   left: {

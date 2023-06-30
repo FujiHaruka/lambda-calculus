@@ -17,6 +17,8 @@ import { assertSnapshot, assertThrows, it } from "./testUtils.ts";
   "x -> y",
   "x y",
   "(x y) z",
+  "(x y) (z w)",
+  "(x y) (z -> w)",
   "x (y z)",
   "x -> (y -> z)",
 ].forEach((code) => {
