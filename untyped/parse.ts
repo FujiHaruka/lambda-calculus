@@ -9,7 +9,7 @@ import { tokenize } from "./tokenize.ts";
 import { PartialNode } from "./parser/PartialNode.ts";
 
 export function parse(code: string): Node {
-  const tokens = tokenize(code);
+  const tokens = tokenize(code, { eofToken: true });
   const value = (token: Token): string => code.slice(token.start, token.end);
   const stack = new Stack<PartialNode>();
   let rootNode: Node | null = null;
@@ -126,25 +126,36 @@ export function parse(code: string): Node {
         type: "abstraction",
         bound: node.child.identifier,
       });
+    } else if (
+      // e.g.
+      // "a -> b" + "EOF"
+      token.type === "eof" &&
+      node &&
+      !node.startsWithLeftParen &&
+      !rootNode
+    ) {
+      const node = stack.pop();
+      return node.toNode();
+    } else if (
+      // e.g.
+      // "(a -> b)" + "EOF"
+      token.type === "eof" &&
+      !node &&
+      rootNode
+    ) {
+      return rootNode;
+    } else if (
+      // e.g.
+      // "(a -> b" + "EOF"
+      token.type === "eof" &&
+      node &&
+      rootNode
+    ) {
+      throw new ParenthesisNotClosedError();
     } else {
       throw new UnexpectedTokenError(token, value(token));
     }
   }
 
-  if (!rootNode && !stack.empty()) {
-    const node = stack.pop();
-    if (!node.startsWithLeftParen) {
-      rootNode = node.toNode();
-    }
-  }
-
-  if (!stack.empty()) {
-    throw new ParenthesisNotClosedError();
-  }
-
-  if (!rootNode) {
-    throw new Error("Unexpected error");
-  }
-
-  return rootNode;
+  throw new Error("Unexpected error");
 }
