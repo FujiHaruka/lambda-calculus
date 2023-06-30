@@ -82,14 +82,6 @@ export class PartialNode {
     }
   }
 
-  evolve(partialNode: PlainPartialNode): void {
-    if (this.type !== "any") {
-      throw new Error("Cannot evolve non-any node");
-    }
-    this.type = partialNode.type;
-    this.node = partialNode;
-  }
-
   toNode(): Node {
     if (!this.isNode()) {
       throw new Error("Cannot convert to node");

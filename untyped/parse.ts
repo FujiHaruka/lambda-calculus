@@ -74,14 +74,19 @@ export function parse(code: string): Node {
       node.type === "any" &&
       node.hasChild()
     ) {
-      node.evolve({
-        type: "application",
-        left: node.child!,
-        right: {
-          type: "var",
-          identifier: value(token),
-        },
-      });
+      stack.pop();
+      stack.push(
+        new PartialNode({
+          type: "application",
+          left: node.child!,
+          right: {
+            type: "var",
+            identifier: value(token),
+          },
+        }, {
+          leftParen: node.leftParen,
+        }),
+      );
     } else if (
       // e.g.
       // "(a b)" + "c"
@@ -189,16 +194,26 @@ export function parse(code: string): Node {
           }
           case "any": {
             if (top.hasChild()) {
-              top.evolve({
-                type: "application",
-                left: top.child!,
-                right: node.toNode(),
-              });
+              stack.pop();
+              stack.push(
+                new PartialNode({
+                  type: "application",
+                  left: top.child!,
+                  right: node.toNode(),
+                }, {
+                  leftParen: top.leftParen,
+                }),
+              );
             } else {
-              top.evolve({
-                type: "application",
-                left: node.toNode(),
-              });
+              stack.pop();
+              stack.push(
+                new PartialNode({
+                  type: "application",
+                  left: node.toNode(),
+                }, {
+                  leftParen: top.leftParen,
+                }),
+              );
             }
           }
         }
@@ -209,10 +224,15 @@ export function parse(code: string): Node {
       token.type === "arrow" &&
       node && node.type === "any" && node.child && node.child.type === "var"
     ) {
-      node.evolve({
-        type: "abstraction",
-        bound: node.child.identifier,
-      });
+      stack.pop();
+      stack.push(
+        new PartialNode({
+          type: "abstraction",
+          bound: node.child.identifier,
+        }, {
+          leftParen: node.leftParen,
+        }),
+      );
     } else if (
       // e.g.
       // "a -> b" + "EOF"
