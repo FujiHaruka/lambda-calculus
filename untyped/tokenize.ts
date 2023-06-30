@@ -9,8 +9,8 @@ function scan(ctx: TokenizerContext): Token | null {
 }
 
 export type TokenizeOptions = {
-  eofToken?: boolean
-}
+  eofToken?: boolean;
+};
 
 /**
  * Tokenize the given code.
@@ -34,7 +34,7 @@ export function tokenize(code: string, options: TokenizeOptions = {}): Token[] {
       type: "eof",
       start: ctx.position,
       end: ctx.position,
-    })
+    });
   } else {
     return ctx.tokens;
   }

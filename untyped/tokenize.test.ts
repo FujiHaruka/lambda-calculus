@@ -19,4 +19,4 @@ import { tokenize } from "./tokenize.ts";
 
 it("tokenizes with eof token", async (t) => {
   await assertSnapshot(t, tokenize("x", { eofToken: true }));
-})
+});
