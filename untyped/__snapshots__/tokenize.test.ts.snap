@@ -1,10 +1,10 @@
 export const snapshot = {};
 
-snapshot[`tokenize "" 1`] = `[]`;
+snapshot[`tokenizes "" 1`] = `[]`;
 
-snapshot[`tokenize " " 1`] = `[]`;
+snapshot[`tokenizes " " 1`] = `[]`;
 
-snapshot[`tokenize "x" 1`] = `
+snapshot[`tokenizes "x" 1`] = `
 [
   {
     end: 1,
@@ -14,7 +14,7 @@ snapshot[`tokenize "x" 1`] = `
 ]
 `;
 
-snapshot[`tokenize " xyz " 1`] = `
+snapshot[`tokenizes " xyz " 1`] = `
 [
   {
     end: 4,
@@ -24,7 +24,7 @@ snapshot[`tokenize " xyz " 1`] = `
 ]
 `;
 
-snapshot[`tokenize "x->x" 1`] = `
+snapshot[`tokenizes "x->x" 1`] = `
 [
   {
     end: 1,
@@ -44,7 +44,7 @@ snapshot[`tokenize "x->x" 1`] = `
 ]
 `;
 
-snapshot[`tokenize "x x" 1`] = `
+snapshot[`tokenizes "x x" 1`] = `
 [
   {
     end: 1,
@@ -59,7 +59,7 @@ snapshot[`tokenize "x x" 1`] = `
 ]
 `;
 
-snapshot[`tokenize "x -> y -> z" 1`] = `
+snapshot[`tokenizes "x -> y -> z" 1`] = `
 [
   {
     end: 1,
@@ -89,7 +89,7 @@ snapshot[`tokenize "x -> y -> z" 1`] = `
 ]
 `;
 
-snapshot[`tokenize "xxx_000 -> yyy_111 -> zzz_222" 1`] = `
+snapshot[`tokenizes "xxx_000 -> yyy_111 -> zzz_222" 1`] = `
 [
   {
     end: 7,
@@ -119,7 +119,7 @@ snapshot[`tokenize "xxx_000 -> yyy_111 -> zzz_222" 1`] = `
 ]
 `;
 
-snapshot[`tokenize "( x  ->  y )  ( x  ->  y )" 1`] = `
+snapshot[`tokenizes "( x  ->  y )  ( x  ->  y )" 1`] = `
 [
   {
     end: 1,
@@ -170,6 +170,21 @@ snapshot[`tokenize "( x  ->  y )  ( x  ->  y )" 1`] = `
     end: 26,
     start: 25,
     type: "right_paren",
+  },
+]
+`;
+
+snapshot[`tokenizes with eof token 1`] = `
+[
+  {
+    end: 1,
+    start: 0,
+    type: "var",
+  },
+  {
+    end: 1,
+    start: 1,
+    type: "eof",
   },
 ]
 `;

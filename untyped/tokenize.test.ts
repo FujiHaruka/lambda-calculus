@@ -12,7 +12,11 @@ import { tokenize } from "./tokenize.ts";
   "xxx_000 -> yyy_111 -> zzz_222",
   "( x  ->  y )  ( x  ->  y )",
 ].forEach((code) => {
-  it(`tokenize "${code}"`, async (t) => {
+  it(`tokenizes "${code}"`, async (t) => {
     await assertSnapshot(t, tokenize(code));
   });
 });
+
+it("tokenizes with eof token", async (t) => {
+  await assertSnapshot(t, tokenize("x", { eofToken: true }));
+})

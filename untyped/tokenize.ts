@@ -8,10 +8,14 @@ function scan(ctx: TokenizerContext): Token | null {
   return scanSymbol(ctx) || scanVar(ctx);
 }
 
+export type TokenizeOptions = {
+  eofToken?: boolean
+}
+
 /**
  * Tokenize the given code.
  */
-export function tokenize(code: string): Token[] {
+export function tokenize(code: string, options: TokenizeOptions = {}): Token[] {
   const ctx = new TokenizerContext({ code, position: 0 });
 
   ctx.skipSpaces();
@@ -25,5 +29,13 @@ export function tokenize(code: string): Token[] {
     ctx.skipSpaces();
   }
 
-  return ctx.tokens;
+  if (options.eofToken) {
+    return ctx.tokens.concat({
+      type: "eof",
+      start: ctx.position,
+      end: ctx.position,
+    })
+  } else {
+    return ctx.tokens;
+  }
 }
