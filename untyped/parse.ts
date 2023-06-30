@@ -12,7 +12,6 @@ export function parse(code: string): Node {
   const tokens = tokenize(code, { eofToken: true });
   const value = (token: Token): string => code.slice(token.start, token.end);
   const stack = new Stack<PartialNode>();
-  let rootNode: Node | null = null;
 
   for (const token of tokens) {
     const node = stack.top();
@@ -88,7 +87,18 @@ export function parse(code: string): Node {
       const top = stack.top();
       if (!top) {
         // Empty stack means we are done parsing
-        rootNode = node.toNode();
+        if (!node.startsWithLeftParen) {
+          // e.g.
+          // "a -> b" + ")"
+          throw new UnexpectedTokenError(token, value(token));
+        }
+        if (node.rightParenReceived) {
+          // e.g.
+          // "(a -> b)" + ")"
+          throw new UnexpectedTokenError(token, value(token));
+        }
+        node.rightParenReceived = true;
+        stack.push(node);
       } else {
         switch (top.type) {
           case "abstraction":
@@ -132,7 +142,7 @@ export function parse(code: string): Node {
       token.type === "eof" &&
       node &&
       !node.startsWithLeftParen &&
-      !rootNode
+      node.isNode()
     ) {
       const node = stack.pop();
       return node.toNode();
@@ -140,16 +150,20 @@ export function parse(code: string): Node {
       // e.g.
       // "(a -> b)" + "EOF"
       token.type === "eof" &&
-      !node &&
-      rootNode
+      node &&
+      node.isNode() &&
+      ((node.startsWithLeftParen && node.rightParenReceived) ||
+        (!node.startsWithLeftParen && !node.rightParenReceived))
     ) {
-      return rootNode;
+      return node.toNode();
     } else if (
       // e.g.
       // "(a -> b" + "EOF"
       token.type === "eof" &&
       node &&
-      rootNode
+      !node.isNode() &&
+      ((!node.startsWithLeftParen && node.rightParenReceived) ||
+        (node.startsWithLeftParen && !node.rightParenReceived))
     ) {
       throw new ParenthesisNotClosedError();
     } else {

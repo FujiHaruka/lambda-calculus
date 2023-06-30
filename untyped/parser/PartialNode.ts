@@ -4,6 +4,7 @@ export class PartialNode {
   type: PlainPartialNode["type"];
   node: PlainPartialNode;
   readonly startsWithLeftParen: boolean;
+  rightParenReceived = false;
 
   constructor(
     partialNode: PlainPartialNode,
