@@ -4,7 +4,7 @@ import {
   ParenthesisNotClosedError,
   UnexpectedTokenError,
 } from "./parser/errors.ts";
-import { Node, VariableNode } from "./parser/types.ts";
+import { Node } from "./parser/types.ts";
 import { tokenize } from "./tokenize.ts";
 import { PartialNode } from "./parser/PartialNode.ts";
 
@@ -25,11 +25,10 @@ export function parse(code: string): Node {
       node &&
       !node.hasChild()
     ) {
-      const varNode: VariableNode = {
+      node.setChild({
         type: "var",
         identifier: value(token),
-      };
-      node.setChild(varNode);
+      });
     } else if (
       // e.g.
       // "" + "a"
@@ -54,14 +53,13 @@ export function parse(code: string): Node {
       node.type === "any" &&
       node.hasChild()
     ) {
-      const varNode: VariableNode = {
-        type: "var",
-        identifier: value(token),
-      };
       node.evolve({
         type: "application",
         left: node.child!,
-        right: varNode,
+        right: {
+          type: "var",
+          identifier: value(token),
+        },
       });
     } else if (
       // e.g.
