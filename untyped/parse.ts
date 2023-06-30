@@ -85,9 +85,9 @@ export function parse(code: string): Node {
     } else if (
       // e.g.
       // "(a b)" + "c"
+      // "(a -> b)" + "c"
       token.type === "var" &&
       node &&
-      node.type === "application" &&
       node.isNode() &&
       node.rightParen
     ) {
@@ -130,9 +130,9 @@ export function parse(code: string): Node {
     } else if (
       // e.g.
       // "(a b)" + "("
+      // "(a -> b)" + "("
       token.type === "left_paren" &&
       node &&
-      node.type === "application" &&
       node.isNode() &&
       node.rightParen
     ) {
