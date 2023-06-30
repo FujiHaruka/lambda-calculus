@@ -53,22 +53,3 @@ export type PlainPartialNode =
   | PartialAbstractionNode
   | PartialApplicationNode
   | PartialAnyNode;
-
-/**
- * Token in the context of parser
- */
-export type ParserTokenType =
-  | "var"
-  | "left_paren"
-  | "right_paren"
-  | "abstraction"
-  | "application";
-
-export type ParserToken =
-  | Readonly<{
-    type: Omit<ParserTokenType, "var">;
-  }>
-  | Readonly<{
-    type: "var";
-    identifier: string;
-  }>;
