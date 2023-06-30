@@ -168,29 +168,22 @@ export function parse(code: string): Node {
       // "((a b) c" + ")"
       token.type === "right_paren" &&
       node &&
-      node.isNode()
+      node.isNode() &&
+      !node.isComplete()
     ) {
+      // "(a -> b" + ")"
       // Pop and modify the top in stack because both abstractions and applications are kind of binary operators.
       stack.pop();
       const top = stack.top();
       if (!top) {
         // Empty stack means we are done parsing
-        if (node.isComplete()) {
-          // e.g.
-          // "a -> b" + ")"
-          // "(a -> b)" + ")"
-          throw new UnexpectedTokenError(token, value(token));
-        }
         node.rightParen = true;
         stack.push(node);
       } else {
+        // "(a (b c" + ")"
         switch (top.type) {
           case "abstraction":
           case "application": {
-            if (top.hasChild()) {
-              throw new UnexpectedTokenError(token, value(token));
-            }
-
             top.setChild(node.toNode());
             break;
           }
