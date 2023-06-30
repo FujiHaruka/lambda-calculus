@@ -43,7 +43,7 @@ export function parse(code: string): Node {
           identifier: value(token),
         },
       }, {
-        startsWithLeftParen: false,
+        leftParen: false,
       });
       stack.push(nextNode);
     } else if (
@@ -71,7 +71,7 @@ export function parse(code: string): Node {
       const nextNode = new PartialNode({
         type: "any",
       }, {
-        startsWithLeftParen: true,
+        leftParen: true,
       });
       stack.push(nextNode);
     } else if (
@@ -87,17 +87,17 @@ export function parse(code: string): Node {
       const top = stack.top();
       if (!top) {
         // Empty stack means we are done parsing
-        if (!node.startsWithLeftParen) {
+        if (!node.leftParen) {
           // e.g.
           // "a -> b" + ")"
           throw new UnexpectedTokenError(token, value(token));
         }
-        if (node.rightParenReceived) {
+        if (node.rightParen) {
           // e.g.
           // "(a -> b)" + ")"
           throw new UnexpectedTokenError(token, value(token));
         }
-        node.rightParenReceived = true;
+        node.rightParen = true;
         stack.push(node);
       } else {
         switch (top.type) {
@@ -141,7 +141,7 @@ export function parse(code: string): Node {
       // "a -> b" + "EOF"
       token.type === "eof" &&
       node &&
-      !node.startsWithLeftParen &&
+      !node.leftParen &&
       node.isNode()
     ) {
       const node = stack.pop();
@@ -152,8 +152,8 @@ export function parse(code: string): Node {
       token.type === "eof" &&
       node &&
       node.isNode() &&
-      ((node.startsWithLeftParen && node.rightParenReceived) ||
-        (!node.startsWithLeftParen && !node.rightParenReceived))
+      ((node.leftParen && node.rightParen) ||
+        (!node.leftParen && !node.rightParen))
     ) {
       return node.toNode();
     } else if (
@@ -162,8 +162,8 @@ export function parse(code: string): Node {
       token.type === "eof" &&
       node &&
       !node.isNode() &&
-      ((!node.startsWithLeftParen && node.rightParenReceived) ||
-        (node.startsWithLeftParen && !node.rightParenReceived))
+      ((!node.leftParen && node.rightParen) ||
+        (node.leftParen && !node.rightParen))
     ) {
       throw new ParenthesisNotClosedError();
     } else {

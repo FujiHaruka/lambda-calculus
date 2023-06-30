@@ -3,16 +3,16 @@ import { Node, PlainPartialNode } from "./types.ts";
 export class PartialNode {
   type: PlainPartialNode["type"];
   node: PlainPartialNode;
-  readonly startsWithLeftParen: boolean;
-  rightParenReceived = false;
+  readonly leftParen: boolean;
+  rightParen = false;
 
   constructor(
     partialNode: PlainPartialNode,
-    options: { startsWithLeftParen: boolean },
+    options: { leftParen: boolean },
   ) {
     this.type = partialNode.type;
     this.node = partialNode;
-    this.startsWithLeftParen = options.startsWithLeftParen;
+    this.leftParen = options.leftParen;
   }
 
   isNode(): boolean {
