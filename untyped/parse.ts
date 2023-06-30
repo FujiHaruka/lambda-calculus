@@ -175,13 +175,9 @@ export function parse(code: string): Node {
       const top = stack.top();
       if (!top) {
         // Empty stack means we are done parsing
-        if (!node.leftParen) {
+        if (node.isComplete()) {
           // e.g.
           // "a -> b" + ")"
-          throw new UnexpectedTokenError(token, value(token));
-        }
-        if (node.rightParen) {
-          // e.g.
           // "(a -> b)" + ")"
           throw new UnexpectedTokenError(token, value(token));
         }
