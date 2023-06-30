@@ -21,6 +21,22 @@ import { assertSnapshot, assertThrows, it } from "./testUtils.ts";
   "(x y) (z -> w)",
   "x (y z)",
   "x -> (y -> z)",
+  "(x -> y) z",
+  // You can omit parentheses in "(a b) c" because application is left-associative.
+  "x y z",
+  "x y z w",
+  "(x y z)",
+  "(x y z w)",
+  "(x y) z w",
+  "x (y z) w",
+  "x y (z w)",
+  "x (y z w)",
+  "(x y) (z w) v",
+  "(x y) z (w v)",
+  "x (y z) (w v)",
+  "x -> (y z w)",
+  "x -> (y -> (z w v))",
+  "(x -> y) z w",
 ].forEach((code) => {
   it(`parse "${code}"`, async (t) => {
     await assertSnapshot(t, parse(code));

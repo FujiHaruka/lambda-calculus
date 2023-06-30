@@ -423,3 +423,372 @@ snapshot[`parse "x -> (y -> z)" 1`] = `
   type: "abstraction",
 }
 `;
+
+snapshot[`parse "x y z" 1`] = `
+{
+  left: {
+    left: {
+      identifier: "x",
+      type: "var",
+    },
+    right: {
+      identifier: "y",
+      type: "var",
+    },
+    type: "application",
+  },
+  right: {
+    identifier: "z",
+    type: "var",
+  },
+  type: "application",
+}
+`;
+
+snapshot[`parse "x y z w" 1`] = `
+{
+  left: {
+    left: {
+      left: {
+        identifier: "x",
+        type: "var",
+      },
+      right: {
+        identifier: "y",
+        type: "var",
+      },
+      type: "application",
+    },
+    right: {
+      identifier: "z",
+      type: "var",
+    },
+    type: "application",
+  },
+  right: {
+    identifier: "w",
+    type: "var",
+  },
+  type: "application",
+}
+`;
+
+snapshot[`parse "(x y z)" 1`] = `
+{
+  left: {
+    left: {
+      identifier: "x",
+      type: "var",
+    },
+    right: {
+      identifier: "y",
+      type: "var",
+    },
+    type: "application",
+  },
+  right: {
+    identifier: "z",
+    type: "var",
+  },
+  type: "application",
+}
+`;
+
+snapshot[`parse "(x y z w)" 1`] = `
+{
+  left: {
+    left: {
+      left: {
+        identifier: "x",
+        type: "var",
+      },
+      right: {
+        identifier: "y",
+        type: "var",
+      },
+      type: "application",
+    },
+    right: {
+      identifier: "z",
+      type: "var",
+    },
+    type: "application",
+  },
+  right: {
+    identifier: "w",
+    type: "var",
+  },
+  type: "application",
+}
+`;
+
+snapshot[`parse "(x y) z w" 1`] = `
+{
+  left: {
+    left: {
+      left: {
+        identifier: "x",
+        type: "var",
+      },
+      right: {
+        identifier: "y",
+        type: "var",
+      },
+      type: "application",
+    },
+    right: {
+      identifier: "z",
+      type: "var",
+    },
+    type: "application",
+  },
+  right: {
+    identifier: "w",
+    type: "var",
+  },
+  type: "application",
+}
+`;
+
+snapshot[`parse "x (y z) w" 1`] = `
+{
+  left: {
+    left: {
+      identifier: "x",
+      type: "var",
+    },
+    right: {
+      left: {
+        identifier: "y",
+        type: "var",
+      },
+      right: {
+        identifier: "z",
+        type: "var",
+      },
+      type: "application",
+    },
+    type: "application",
+  },
+  right: {
+    identifier: "w",
+    type: "var",
+  },
+  type: "application",
+}
+`;
+
+snapshot[`parse "x y (z w)" 1`] = `
+{
+  left: {
+    left: {
+      identifier: "x",
+      type: "var",
+    },
+    right: {
+      identifier: "y",
+      type: "var",
+    },
+    type: "application",
+  },
+  right: {
+    left: {
+      identifier: "z",
+      type: "var",
+    },
+    right: {
+      identifier: "w",
+      type: "var",
+    },
+    type: "application",
+  },
+  type: "application",
+}
+`;
+
+snapshot[`parse "x (y z w)" 1`] = `
+{
+  left: {
+    identifier: "x",
+    type: "var",
+  },
+  right: {
+    left: {
+      left: {
+        identifier: "y",
+        type: "var",
+      },
+      right: {
+        identifier: "z",
+        type: "var",
+      },
+      type: "application",
+    },
+    right: {
+      identifier: "w",
+      type: "var",
+    },
+    type: "application",
+  },
+  type: "application",
+}
+`;
+
+snapshot[`parse "(x y) (z w) v" 1`] = `
+{
+  left: {
+    left: {
+      left: {
+        identifier: "x",
+        type: "var",
+      },
+      right: {
+        identifier: "y",
+        type: "var",
+      },
+      type: "application",
+    },
+    right: {
+      left: {
+        identifier: "z",
+        type: "var",
+      },
+      right: {
+        identifier: "w",
+        type: "var",
+      },
+      type: "application",
+    },
+    type: "application",
+  },
+  right: {
+    identifier: "v",
+    type: "var",
+  },
+  type: "application",
+}
+`;
+
+snapshot[`parse "(x y) z (w v)" 1`] = `
+{
+  left: {
+    left: {
+      left: {
+        identifier: "x",
+        type: "var",
+      },
+      right: {
+        identifier: "y",
+        type: "var",
+      },
+      type: "application",
+    },
+    right: {
+      identifier: "z",
+      type: "var",
+    },
+    type: "application",
+  },
+  right: {
+    left: {
+      identifier: "w",
+      type: "var",
+    },
+    right: {
+      identifier: "v",
+      type: "var",
+    },
+    type: "application",
+  },
+  type: "application",
+}
+`;
+
+snapshot[`parse "x (y z) (w v)" 1`] = `
+{
+  left: {
+    left: {
+      identifier: "x",
+      type: "var",
+    },
+    right: {
+      left: {
+        identifier: "y",
+        type: "var",
+      },
+      right: {
+        identifier: "z",
+        type: "var",
+      },
+      type: "application",
+    },
+    type: "application",
+  },
+  right: {
+    left: {
+      identifier: "w",
+      type: "var",
+    },
+    right: {
+      identifier: "v",
+      type: "var",
+    },
+    type: "application",
+  },
+  type: "application",
+}
+`;
+
+snapshot[`parse "x -> (y z w)" 1`] = `
+{
+  body: {
+    left: {
+      left: {
+        identifier: "y",
+        type: "var",
+      },
+      right: {
+        identifier: "z",
+        type: "var",
+      },
+      type: "application",
+    },
+    right: {
+      identifier: "w",
+      type: "var",
+    },
+    type: "application",
+  },
+  bound: "x",
+  type: "abstraction",
+}
+`;
+
+snapshot[`parse "x -> (y -> (z w v))" 1`] = `
+{
+  body: {
+    body: {
+      left: {
+        left: {
+          identifier: "z",
+          type: "var",
+        },
+        right: {
+          identifier: "w",
+          type: "var",
+        },
+        type: "application",
+      },
+      right: {
+        identifier: "v",
+        type: "var",
+      },
+      type: "application",
+    },
+    bound: "y",
+    type: "abstraction",
+  },
+  bound: "x",
+  type: "abstraction",
+}
+`;

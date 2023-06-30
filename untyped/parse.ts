@@ -18,6 +18,27 @@ export function parse(code: string): Node {
 
     if (
       // e.g.
+      // "a b" + "c"
+      // "(a b" + "c"
+      token.type === "var" &&
+      node &&
+      node.isNode() &&
+      !node.rightParen
+    ) {
+      stack.pop();
+      const nextNode = new PartialNode({
+        type: "application",
+        left: node.toNode(),
+        right: {
+          type: "var",
+          identifier: value(token),
+        },
+      }, {
+        leftParen: node.leftParen,
+      });
+      stack.push(nextNode);
+    } else if (
+      // e.g.
       // "(" + "a"
       // "(a ->" + "b"
       // "((a b)" + "c"
@@ -82,6 +103,30 @@ export function parse(code: string): Node {
         leftParen: false,
       });
       stack.push(nextNode);
+    } else if (
+      // e.g.
+      // "a b" + "("
+      token.type === "left_paren" &&
+      node &&
+      node.type === "application" &&
+      node.isNode() &&
+      !node.rightParen
+    ) {
+      stack.pop();
+      const nextNode = new PartialNode({
+        type: "application",
+        left: node.toNode(),
+      }, {
+        leftParen: node.leftParen,
+      });
+      stack.push(nextNode);
+
+      const nextAnyNode = new PartialNode({
+        type: "any",
+      }, {
+        leftParen: true,
+      });
+      stack.push(nextAnyNode);
     } else if (
       // e.g.
       // "(a b)" + "("
