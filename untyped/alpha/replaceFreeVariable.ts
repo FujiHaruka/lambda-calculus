@@ -1,4 +1,4 @@
-import { UnsupportedSubstitutionError } from "../errors.ts";
+import { UnsupportedSubstitutionError } from "./errors.ts";
 import { Node } from "../parser/types.ts";
 import { assertNever } from "../utils.ts";
 import { collectFreeVariables } from "./collectFreeVariables.ts";
