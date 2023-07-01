@@ -196,26 +196,22 @@ export function parse(code: string): Node {
           break;
         }
         case "any": {
-          if (top.hasChild()) {
-            stack.push(
-              new PartialNode({
-                type: "application",
-                left: top.child!,
-                right: node.toNode(),
-              }, {
-                leftParen: top.leftParen,
-              }),
-            );
-          } else {
-            stack.push(
-              new PartialNode({
-                type: "application",
-                left: node.toNode(),
-              }, {
-                leftParen: top.leftParen,
-              }),
-            );
-          }
+          const children = top.hasChild()
+            ? {
+              left: top.child!,
+              right: node.toNode(),
+            }
+            : {
+              left: node.toNode(),
+            };
+          stack.push(
+            new PartialNode({
+              type: "application",
+              ...children,
+            }, {
+              leftParen: top.leftParen,
+            }),
+          );
           break;
         }
         case "root": {
