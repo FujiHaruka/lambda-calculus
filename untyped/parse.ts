@@ -269,7 +269,7 @@ export function parse(code: string): Node {
     ) {
       throw new ParenthesisNotClosedError();
     } else {
-      throw new UnexpectedTokenError(token, value(token));
+      throw new UnexpectedTokenError({ token, code });
     }
   }
 
