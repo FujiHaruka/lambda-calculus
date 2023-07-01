@@ -19,12 +19,12 @@ export function replaceFreeVariable(
       if (node.bound === freeVar) {
         // freeVar is bound in node, so we don't need to replace it.
         // e.g.
-        // (x -> x) [y/x] == (x -> x)
+        // (x -> x) [x:=y] == (x -> x)
         return node;
       } else if (node.bound !== freeVar && node.bound !== replacement) {
         // freeVar is not bound, neither is replacement, so we can replace vars in body.
         // e.g.
-        // (z -> x) [y/x] == (z -> y)
+        // (z -> x) [x:=y] == (z -> y)
         return {
           type: "abstraction",
           bound: node.bound,
@@ -34,7 +34,7 @@ export function replaceFreeVariable(
         // the case of node.bound === replacement
         // freeVar is not bound, but replacement is, so we need to rename the bound variable.
         // e.g.
-        // (y -> x) [y/x] == (_y -> y)
+        // (y -> x) [x:=y] == (_y -> y)
 
         // TODO: renamed bound variable should not occur in the body.
         const newBound = `_${replacement}`;
