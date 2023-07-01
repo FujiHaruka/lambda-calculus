@@ -1,4 +1,5 @@
 import { Node } from "./parser/types.ts";
+import { assertNever } from "./utils.ts";
 
 /**
  * Convert AST to code string
@@ -13,6 +14,9 @@ export function stringify(node: Node): string {
     }
     case "application": {
       return `(${stringify(node.left)} ${stringify(node.right)})`;
+    }
+    default: {
+      assertNever(node);
     }
   }
 }
