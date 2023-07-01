@@ -27,7 +27,10 @@ export function performAlphaConvertion(
     body: replaceFreeVariable(
       abstractionNode.body,
       abstractionNode.bound,
-      replacement,
+      {
+        type: "var",
+        identifier: replacement,
+      },
     ),
   };
 }

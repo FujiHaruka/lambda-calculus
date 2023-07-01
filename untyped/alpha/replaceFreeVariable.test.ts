@@ -1,6 +1,6 @@
 import { parse } from "../parse.ts";
 import { stringify } from "../stringify.ts";
-import { assertEquals, it } from "../testUtils.ts";
+import { assertEquals, assertThrows, it } from "../testUtils.ts";
 import { replaceFreeVariable } from "./replaceFreeVariable.ts";
 
 const cases: {
@@ -45,30 +45,26 @@ const cases: {
     replacement: "w",
     expected: "(x -> ((y -> x) (z (y x))))",
   },
-  {
-    code: "(x -> y)",
-    freeVar: "y",
-    replacement: "x",
-    expected: "(_x -> x)",
-  },
-  {
-    code: "(x -> ((x y) z))",
-    freeVar: "y",
-    replacement: "x",
-    expected: "(_x -> ((_x x) z))",
-  },
-  {
-    code: "((x -> (y -> (z x))) (z w))",
-    freeVar: "z",
-    replacement: "x",
-    expected: "((_x -> (y -> (x _x))) (x w))",
-  },
 ];
 
 cases.forEach(({ code, freeVar, replacement, expected }) => {
   it(`replaces free var "${freeVar}" with ${replacement} in "${code}"`, () => {
     const node = parse(code);
-    const replaced = replaceFreeVariable(node, freeVar, replacement);
+    const replaced = replaceFreeVariable(node, freeVar, {
+      type: "var",
+      identifier: replacement,
+    });
     assertEquals(stringify(replaced), expected);
   });
+});
+
+it("throws if try to replace free var with bound var", () => {
+  const node = parse("(x -> y)");
+  assertThrows(
+    () =>
+      replaceFreeVariable(node, "y", {
+        type: "var",
+        identifier: "x",
+      }),
+  );
 });

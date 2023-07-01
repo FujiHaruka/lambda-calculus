@@ -1,5 +1,7 @@
+import { UnsupportedSubstitutionError } from "../errors.ts";
 import { Node } from "../parser/types.ts";
 import { assertNever } from "../utils.ts";
+import { collectFreeVariables } from "./collectFreeVariables.ts";
 
 /**
  * Replace all free occurrences of `freeVar` in AST with `replacement`
@@ -7,13 +9,11 @@ import { assertNever } from "../utils.ts";
 export function replaceFreeVariable(
   node: Node,
   freeVar: string,
-  replacement: string,
+  replacement: Node,
 ): Node {
   switch (node.type) {
     case "var": {
-      return node.identifier === freeVar
-        ? { type: "var", identifier: replacement }
-        : node;
+      return node.identifier === freeVar ? structuredClone(replacement) : node;
     }
     case "abstraction": {
       if (node.bound === freeVar) {
@@ -21,7 +21,10 @@ export function replaceFreeVariable(
         // e.g.
         // (x -> x) [x:=y] == (x -> x)
         return node;
-      } else if (node.bound !== freeVar && node.bound !== replacement) {
+      } else if (
+        node.bound !== freeVar &&
+        !collectFreeVariables(replacement).has(node.bound)
+      ) {
         // freeVar is not bound, neither is replacement, so we can replace vars in body.
         // e.g.
         // (z -> x) [x:=y] == (z -> y)
@@ -36,17 +39,9 @@ export function replaceFreeVariable(
         // e.g.
         // (y -> x) [x:=y] == (_y -> y)
 
-        // TODO: renamed bound variable should not occur in the body.
-        const newBound = `_${replacement}`;
-        return {
-          type: "abstraction",
-          bound: newBound,
-          body: replaceFreeVariable(
-            replaceFreeVariable(node.body, node.bound, newBound),
-            freeVar,
-            replacement,
-          ),
-        };
+        throw new UnsupportedSubstitutionError(
+          "Replacing free variable with already bound variable is not supported.",
+        );
       }
     }
     case "application": {
