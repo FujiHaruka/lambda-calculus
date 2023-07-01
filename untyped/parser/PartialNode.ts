@@ -21,7 +21,7 @@ export class PartialNode {
 
   isImcompleteNode(): boolean {
     const { node } = this;
-    return node.type === "any" ||
+    return node.type === "any" || node.type === "root" ||
       (node.type === "abstraction" && !node.body) ||
       (node.type === "application" && !node.right);
   }
@@ -78,6 +78,9 @@ export class PartialNode {
       case "any": {
         this.node.child = node;
         return;
+      }
+      case "root": {
+        throw new Error("Cannot set child to root node");
       }
     }
   }

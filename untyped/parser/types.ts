@@ -49,7 +49,12 @@ export type PartialAnyNode = {
   child?: Node;
 };
 
+export type PartialRootNode = {
+  type: "root";
+};
+
 export type PlainPartialNode =
   | PartialAbstractionNode
   | PartialApplicationNode
-  | PartialAnyNode;
+  | PartialAnyNode
+  | PartialRootNode;

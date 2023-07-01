@@ -12,6 +12,13 @@ export function parse(code: string): Node {
   const tokens = tokenize(code, { eofToken: true });
   const value = (token: Token): string => code.slice(token.start, token.end);
   const stack = new Stack<PartialNode>();
+  stack.push(
+    new PartialNode({
+      type: "root",
+    }, {
+      leftParen: false,
+    }),
+  );
 
   for (const token of tokens) {
     const node = stack.top();
@@ -44,6 +51,7 @@ export function parse(code: string): Node {
       // "((a b)" + "c"
       token.type === "var" &&
       node &&
+      node.type !== "root" &&
       !node.hasChild()
     ) {
       node.setChild({
@@ -54,7 +62,8 @@ export function parse(code: string): Node {
       // e.g.
       // "" + "a"
       token.type === "var" &&
-      !node
+      node &&
+      node.type === "root"
     ) {
       const nextNode = new PartialNode({
         type: "any",
@@ -171,51 +180,48 @@ export function parse(code: string): Node {
       // e.g.
       // "(a -> b" + ")"
       // "((a b) c" + ")"
+      // "(a (b c" + ")"
       token.type === "right_paren" &&
       node &&
       node.isNode() &&
       !node.isComplete()
     ) {
-      // "(a -> b" + ")"
-      // Pop and modify the top in stack because both abstractions and applications are kind of binary operators.
       stack.pop();
-      const top = stack.top();
-      if (!top) {
-        // Empty stack means we are done parsing
-        node.rightParen = true;
-        stack.push(node);
-      } else {
-        // "(a (b c" + ")"
-        switch (top.type) {
-          case "abstraction":
-          case "application": {
-            top.setChild(node.toNode());
-            break;
+      const top = stack.pop();
+      switch (top.type) {
+        case "abstraction":
+        case "application": {
+          top.setChild(node.toNode());
+          stack.push(top);
+          break;
+        }
+        case "any": {
+          if (top.hasChild()) {
+            stack.push(
+              new PartialNode({
+                type: "application",
+                left: top.child!,
+                right: node.toNode(),
+              }, {
+                leftParen: top.leftParen,
+              }),
+            );
+          } else {
+            stack.push(
+              new PartialNode({
+                type: "application",
+                left: node.toNode(),
+              }, {
+                leftParen: top.leftParen,
+              }),
+            );
           }
-          case "any": {
-            if (top.hasChild()) {
-              stack.pop();
-              stack.push(
-                new PartialNode({
-                  type: "application",
-                  left: top.child!,
-                  right: node.toNode(),
-                }, {
-                  leftParen: top.leftParen,
-                }),
-              );
-            } else {
-              stack.pop();
-              stack.push(
-                new PartialNode({
-                  type: "application",
-                  left: node.toNode(),
-                }, {
-                  leftParen: top.leftParen,
-                }),
-              );
-            }
-          }
+          break;
+        }
+        case "root": {
+          node.rightParen = true;
+          stack.push(node);
+          break;
         }
       }
     } else if (
