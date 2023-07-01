@@ -191,16 +191,23 @@ export function parse(code: string): Node {
       switch (top.type) {
         case "abstraction":
         case "application": {
+          // e.g.
+          // "(x -> (y -> z" + ")"
+          // "(x (y z" + ")"
           top.setChild(node.toNode());
           stack.push(top);
           break;
         }
         case "any": {
           const children = top.hasChild()
+            // e.g.
+            // "(a (b c" + ")"
             ? {
               left: top.child!,
               right: node.toNode(),
             }
+            // e.g.
+            // "((x y" + ")"
             : {
               left: node.toNode(),
             };
