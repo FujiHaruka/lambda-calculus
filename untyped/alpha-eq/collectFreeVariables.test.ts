@@ -18,6 +18,10 @@ const cases: {
     code: "(x ((y -> x) (a -> b)))",
     expected: ["x", "b"],
   },
+  {
+    code: "((x -> y) (x z))",
+    expected: ["x", "y", "z"],
+  },
 ];
 
 cases.forEach(({ code, expected }) => {
