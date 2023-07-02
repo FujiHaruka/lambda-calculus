@@ -262,10 +262,20 @@ export function parse(code: string): Node {
       return node.toNode();
     } else if (
       // e.g.
+      // "a" + "EOF"
+      token.type === "eof" &&
+      node &&
+      node.type === "any" &&
+      !node.leftParen &&
+      node.child
+    ) {
+      return node.child;
+    } else if (
+      // e.g.
       // "(a -> b" + "EOF"
       token.type === "eof" &&
       node &&
-      !node.isNode()
+      !node.isComplete()
     ) {
       throw new ParenthesisNotClosedError();
     } else {
