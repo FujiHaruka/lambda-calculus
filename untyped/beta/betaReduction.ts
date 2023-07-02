@@ -63,16 +63,14 @@ export function performBetaReductionUntilDone(
     }
 
     const reduced = performBetaReduction(currentNode);
-    if (reduced !== RedexNotFound) {
-      if (equal(currentNode, reduced)) {
-        throw new InfiniteReductionError();
-      }
-    }
-
-    reductionCount++;
     if (reduced === RedexNotFound) {
       break;
     }
+    if (equal(currentNode, reduced)) {
+      throw new InfiniteReductionError();
+    }
+
+    reductionCount++;
     reductionHistory.push(reduced);
     currentNode = reduced;
   }
