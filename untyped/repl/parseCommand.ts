@@ -59,7 +59,10 @@ export function parseCommand(line: string): Command {
         throw new UnknownCommandError(commandName);
     }
   } else {
-    throw new Error("Not implemented yet");
+    return {
+      type: "validate",
+      expression: line,
+    };
   }
 }
 

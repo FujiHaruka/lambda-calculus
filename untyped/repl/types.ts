@@ -1,4 +1,9 @@
-export type CommandType = "empty" | "reduce" | "reduce_verbose" | "exit";
+export type CommandType =
+  | "empty"
+  | "validate"
+  | "reduce"
+  | "reduce_verbose"
+  | "exit";
 
 interface BaseCommand {
   type: CommandType;
@@ -6,6 +11,11 @@ interface BaseCommand {
 
 export interface EmptyCommand extends BaseCommand {
   type: "empty";
+}
+
+export interface ValidateCommand extends BaseCommand {
+  type: "validate";
+  expression: string;
 }
 
 export interface ReduceCommand extends BaseCommand {
@@ -24,6 +34,7 @@ export interface ExitCommand extends BaseCommand {
 
 export type Command =
   | EmptyCommand
+  | ValidateCommand
   | ReduceCommand
   | ReduceVerboseCommand
   | ExitCommand;

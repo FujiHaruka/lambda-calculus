@@ -2,6 +2,7 @@ import { assertNever } from "../utils.ts";
 import {
   executeReduceCommand,
   executeReduceVerboseCommand,
+  executeValidateCommand,
 } from "./commands.ts";
 import { parseCommand } from "./parseCommand.ts";
 
@@ -15,6 +16,8 @@ export class Repl {
           return "";
         case "exit":
           return Deno.exit(0);
+        case "validate":
+          return executeValidateCommand(command.expression);
         case "reduce":
           return executeReduceCommand(command.expression);
         case "reduce_verbose":

@@ -29,6 +29,13 @@ it("returns reduce_verbose command for REDUCE_V", () => {
   });
 });
 
+it("returns validate command if the line does not starts with upper case letter", () => {
+  assertEquals(parseCommand("x -> y"), {
+    type: "validate",
+    expression: "x -> y",
+  });
+});
+
 it("trims input", () => {
   assertEquals(parseCommand("  EXIT  "), { type: "exit" });
 });
