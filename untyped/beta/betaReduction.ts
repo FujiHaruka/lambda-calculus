@@ -1,7 +1,9 @@
 import { replaceFreeVariable } from "../alpha/replaceFreeVariable.ts";
 import { Node } from "../parser/types.ts";
+import { InfiniteReductionError, MaxReductionExceededError } from "./errors.ts";
 import {
   assertNodeType,
+  equal,
   findLeftmostOutermostRedex,
   NodeFound,
   replace,
@@ -33,4 +35,47 @@ export function performBetaReduction(node: Node): Node | typeof RedexNotFound {
 
   const reduced = performBetaReductionToRedex(redex.node);
   return replace(node, redex.path, reduced);
+}
+
+/**
+ * Perform beta reduction until beta normal form, i.e. no more beta-reducible.
+ * Note that there is no guarantee that a lambda term has a beta normal form.
+ * If it doesn't, the reduction process will never terminate in general.
+ * For example, the lambda term "(λx. x x) (λx. x x)" has no beta normal form:
+ * To avoid infinite loop, this function will throw an error if the reduction process exceeds the limit.
+ */
+export function performBetaReductionUntilDone(
+  node: Node,
+  options: { maxReductionCount?: number } = {},
+): Node[] {
+  const { maxReductionCount = 100 } = options;
+  if (maxReductionCount < 1) {
+    throw new Error("maxReductionCount must be greater than 0");
+  }
+
+  const reductionHistory: Node[] = [];
+
+  let reductionCount = 0;
+  let currentNode: Node = node;
+  while (true) {
+    if (reductionCount > maxReductionCount) {
+      throw new MaxReductionExceededError();
+    }
+
+    const reduced = performBetaReduction(currentNode);
+    if (reduced !== RedexNotFound) {
+      if (equal(currentNode, reduced)) {
+        throw new InfiniteReductionError();
+      }
+    }
+
+    reductionCount++;
+    if (reduced === RedexNotFound) {
+      break;
+    }
+    reductionHistory.push(reduced);
+    currentNode = reduced;
+  }
+
+  return reductionHistory;
 }

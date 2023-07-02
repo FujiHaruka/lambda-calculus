@@ -1,10 +1,17 @@
 import { parse } from "../parse.ts";
+import { stringify } from "../stringify.ts";
 import { assertEquals, assertThrows, describe, it } from "../testUtils.ts";
 import {
   performBetaReduction,
   performBetaReductionToRedex,
+  performBetaReductionUntilDone,
   RedexNotFound,
 } from "./betaReduction.ts";
+import {
+  InfiniteReductionError,
+  MaxReductionExceededError,
+  UnexpectedNodeTypeError,
+} from "./errors.ts";
 import { BetaReducibleNode } from "./types.ts";
 
 const redexCases: {
@@ -38,12 +45,18 @@ describe(performBetaReductionToRedex.name, () => {
 
   it("throws if the node is not an application", () => {
     const node = parse("(x -> y)") as BetaReducibleNode;
-    assertThrows(() => performBetaReductionToRedex(node));
+    assertThrows(
+      () => performBetaReductionToRedex(node),
+      UnexpectedNodeTypeError,
+    );
   });
 
   it("throws if the node is an application but the left of the node is not abstraction", () => {
     const node = parse("((x y) x)") as BetaReducibleNode;
-    assertThrows(() => performBetaReductionToRedex(node));
+    assertThrows(
+      () => performBetaReductionToRedex(node),
+      UnexpectedNodeTypeError,
+    );
   });
 });
 
@@ -86,5 +99,56 @@ describe(performBetaReduction.name, () => {
     const node = parse("x -> y");
     const result = performBetaReduction(node);
     assertEquals(result, RedexNotFound);
+  });
+});
+
+describe(performBetaReductionUntilDone.name, () => {
+  const cases: {
+    code: string;
+    expected: string[];
+  }[] = [{
+    code: "t ((x -> x) z)",
+    expected: ["(t z)"],
+  }, {
+    code: "((x -> x) z) ((x -> x) z)",
+    expected: ["(z ((x -> x) z))", "(z z)"],
+  }, {
+    code: "t -> ((x -> x) ((x -> x) z))",
+    expected: ["(t -> ((x -> x) z))", "(t -> z)"],
+  }];
+
+  cases.forEach(({ code, expected }) => {
+    it(`reduces "${code}" with the leftmost strategy`, () => {
+      const node = parse(code);
+      const result = performBetaReductionUntilDone(node)
+        .map(stringify);
+      assertEquals(result, expected);
+    });
+  });
+
+  it("throws if infinite loop is detected", () => {
+    const node = parse("(x -> (x x)) (x -> (x x))");
+    assertThrows(
+      () => performBetaReductionUntilDone(node),
+      InfiniteReductionError,
+    );
+  });
+
+  it("throws if negative number or zero is given as maxReductionCount", () => {
+    const node = parse("x -> y");
+    assertThrows(() =>
+      performBetaReductionUntilDone(node, { maxReductionCount: 0 })
+    );
+    assertThrows(() =>
+      performBetaReductionUntilDone(node, { maxReductionCount: -1 })
+    );
+  });
+
+  it("throws if max reduction count is reached", () => {
+    const node = parse("((x -> x) z) ((x -> x) z) ((x -> x) z)");
+    assertThrows(
+      () => performBetaReductionUntilDone(node, { maxReductionCount: 1 }),
+      MaxReductionExceededError,
+    );
   });
 });

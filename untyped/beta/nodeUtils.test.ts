@@ -1,6 +1,7 @@
 import { parse } from "../parse.ts";
 import { assertEquals, assertThrows, describe, it } from "../testUtils.ts";
 import {
+  equal,
   findLeftmostOutermostRedex,
   isBetaReducible,
   NodeFound,
@@ -182,6 +183,47 @@ describe(findLeftmostOutermostRedex.name, () => {
       const node = parse(code);
       const result = findLeftmostOutermostRedex(node);
       assertEquals(result, expected);
+    });
+  });
+});
+
+describe(equal.name, () => {
+  const trueCases = [
+    "x -> y",
+    "x -> (y z)",
+    "x -> (z (w -> y))",
+  ];
+  trueCases.forEach((code) => {
+    it(`returns true for "${code}"`, () => {
+      const node = parse(code);
+      const result = equal(node, node);
+      assertEquals(result, true);
+    });
+  });
+
+  const falseCases: {
+    code1: string;
+    code2: string;
+  }[] = [
+    {
+      code1: "x -> y",
+      code2: "x -> z",
+    },
+    {
+      code1: "x -> (y z)",
+      code2: "x -> (z y)",
+    },
+    {
+      code1: "x -> (z (w -> y))",
+      code2: "x -> (z (w -> z))",
+    },
+  ];
+  falseCases.forEach(({ code1, code2 }) => {
+    it(`returns false for "${code1}" and "${code2}"`, () => {
+      const node1 = parse(code1);
+      const node2 = parse(code2);
+      const result = equal(node1, node2);
+      assertEquals(result, false);
     });
   });
 });

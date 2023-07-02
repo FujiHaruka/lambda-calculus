@@ -136,3 +136,15 @@ export function findLeftmostOutermostRedex(
     }
   }
 }
+
+export function equal(nodeA: Node, nodeB: Node): boolean {
+  if (nodeA.type === "var" && nodeB.type === "var") {
+    return nodeA.identifier === nodeB.identifier;
+  } else if (nodeA.type === "abstraction" && nodeB.type === "abstraction") {
+    return nodeA.bound === nodeB.bound && equal(nodeA.body, nodeB.body);
+  } else if (nodeA.type === "application" && nodeB.type === "application") {
+    return equal(nodeA.left, nodeB.left) && equal(nodeA.right, nodeB.right);
+  } else {
+    return false;
+  }
+}
