@@ -6,8 +6,12 @@ const LowerCaseAlphabets = new Set(
 );
 const UpperCaseAlphabets = new Set([..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"]);
 const Digits = new Set([..."0123456789"]);
-const Symbols = new Set([..."_$"])
-const NonDigits = new Set([...LowerCaseAlphabets, ...UpperCaseAlphabets, ...Symbols]);
+const Symbols = new Set([..."_$"]);
+const NonDigits = new Set([
+  ...LowerCaseAlphabets,
+  ...UpperCaseAlphabets,
+  ...Symbols,
+]);
 const Letters = new Set([
   ...NonDigits,
   ...Digits,

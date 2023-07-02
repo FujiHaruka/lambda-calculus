@@ -6,7 +6,7 @@ export function startRepl() {
   console.log("Lambda calculus");
   console.log("exit using ctrl+c or EXIT");
   while (true) {
-    const line = prompt(">") ?? ""
+    const line = prompt(">") ?? "";
     const out = repl.eval(line);
     if (out) {
       console.log(out);
