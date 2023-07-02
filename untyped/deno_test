@@ -1,7 +1,0 @@
-#!/bin/bash
-#
-# deno test command
-
-set -euo pipefail
-
-deno test --allow-read --allow-write "$@"
