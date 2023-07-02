@@ -5,7 +5,7 @@ import { BetaReducibleNode } from "./types.ts";
 /**
  * Perform beta reduction on application node.
  */
-export function performBetaReduction(node: BetaReducibleNode): Node {
+export function performBetaReductionToRedex(node: BetaReducibleNode): Node {
   if (node.type !== "application") {
     throw new Error(`Expected application node, got ${node.type}`);
   }

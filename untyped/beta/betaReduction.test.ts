@@ -1,10 +1,10 @@
 import { parse } from "../parse.ts";
 import { stringify } from "../stringify.ts";
 import { assertEquals, assertThrows, describe, it } from "../testUtils.ts";
-import { performBetaReduction } from "./betaReduction.ts";
+import { performBetaReductionToRedex } from "./betaReduction.ts";
 import { BetaReducibleNode } from "./types.ts";
 
-describe(performBetaReduction.name, () => {
+describe(performBetaReductionToRedex.name, () => {
   const cases: {
     code: string;
     expected: string;
@@ -28,18 +28,18 @@ describe(performBetaReduction.name, () => {
   cases.forEach(({ code, expected }) => {
     it(`converts "${code}" into "${expected}"`, () => {
       const node = parse(code) as BetaReducibleNode;
-      const result = performBetaReduction(node);
+      const result = performBetaReductionToRedex(node);
       assertEquals(stringify(result), expected);
     });
   });
 
   it("throws if the node is not an application", () => {
     const node = parse("(x -> y)") as BetaReducibleNode;
-    assertThrows(() => performBetaReduction(node));
+    assertThrows(() => performBetaReductionToRedex(node));
   });
 
   it("throws if the node is an application but the left of the node is not abstraction", () => {
     const node = parse("((x y) x)") as BetaReducibleNode;
-    assertThrows(() => performBetaReduction(node));
+    assertThrows(() => performBetaReductionToRedex(node));
   });
 });
