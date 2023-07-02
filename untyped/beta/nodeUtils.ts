@@ -7,7 +7,7 @@ export function isBetaReducible(node: Node): node is BetaReducibleNode {
   return node.type === "application" && node.left.type === "abstraction";
 }
 
-function assertNodeType<T extends NodeType>(
+export function assertNodeType<T extends NodeType>(
   type: string,
   expected: T,
 ): asserts type is T {
