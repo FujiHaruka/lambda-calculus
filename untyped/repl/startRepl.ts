@@ -1,21 +1,17 @@
-import { readLines } from "./deps.ts";
 import { Repl } from "./repl.ts";
 
-export async function startRepl() {
+export function startRepl() {
   const repl = new Repl();
 
   console.log("Lambda calculus");
-  console.log("exit using ctrl+c, ctrl+d, or EXIT");
-  printHead();
-  for await (const line of readLines(Deno.stdin)) {
+  console.log("exit using ctrl+c or EXIT");
+  while (true) {
+    const line = prompt(">") ?? ""
     const out = repl.eval(line);
     if (out) {
       console.log(out);
     }
-    printHead();
+    // Reset cursor position
+    Deno.stdout.writeSync(new TextEncoder().encode("\r"));
   }
-}
-
-function printHead() {
-  Deno.stdout.write(new TextEncoder().encode("> "));
 }
