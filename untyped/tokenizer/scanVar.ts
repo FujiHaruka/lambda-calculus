@@ -1,39 +1,30 @@
 import { TokenizerContext } from "./TokenizerContext.ts";
 import { ScanResult } from "./types.ts";
 
-const LowerCaseLetters: Readonly<Set<string>> = new Set(
-  "abcdefghijklmnopqrstuvwxyz".split(""),
+const LowerCaseAlphabets = new Set(
+  [..."abcdefghijklmnopqrstuvwxyz"],
 );
-const UpperCaseLetters = new Set("ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""));
-const Digits = new Set("0123456789".split(""));
+const UpperCaseAlphabets = new Set([..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"]);
+const Digits = new Set([..."0123456789"]);
+const Symbols = new Set([..."_$"])
+const NonDigits = new Set([...LowerCaseAlphabets, ...UpperCaseAlphabets, ...Symbols]);
 const Letters = new Set([
-  ...LowerCaseLetters,
-  ...UpperCaseLetters,
+  ...NonDigits,
   ...Digits,
-  "_",
 ]);
-
-function isLowerCaseLetter(char: string): boolean {
-  return LowerCaseLetters.has(char);
-}
-
-function isLetter(char: string): boolean {
-  return Letters.has(char);
-}
 
 /**
  * Scan a variable.
- * A variable starts with a lower case letter and is followed by letters, numbers and underscores.
+ * A variable starts with non-digit letters is followed by letters, numbers and "_" + "$".
  */
 export function scanVar(ctx: TokenizerContext): ScanResult {
   const start = ctx.position;
-  const char = ctx.code[start];
-  if (!isLowerCaseLetter(char)) {
+  if (!NonDigits.has(ctx.code[start])) {
     return null;
   }
 
   let end = start + 1;
-  while (isLetter(ctx.code[end])) {
+  while (Letters.has(ctx.code[end])) {
     end++;
   }
 

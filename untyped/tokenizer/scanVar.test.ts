@@ -8,6 +8,9 @@ const validTokens = [
   "abc123",
   "abc_123",
   "abcABC",
+  "ABC",
+  "$true",
+  "$TRUE",
 ];
 
 validTokens.forEach((token) => {
@@ -24,10 +27,9 @@ validTokens.forEach((token) => {
 
 const invalidTokens = [
   "1",
-  "_",
-  "ABC",
+  "あ",
   "",
-  "$",
+  "%",
 ];
 
 invalidTokens.forEach((token) => {
