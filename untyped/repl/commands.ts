@@ -6,7 +6,8 @@ import { stringify } from "../stringify.ts";
 
 export function executeReduceCommand(expression: string): string {
   const node = parse(expression);
-  const reductionHistory = performBetaReductionUntilDone(node);
+  const unfoleded = unfoldAliases(node, BuiltinAliasesMap);
+  const reductionHistory = performBetaReductionUntilDone(unfoleded);
   if (reductionHistory.length === 0) {
     throw new Error("Unexpected empty reduction history");
   } else {
@@ -16,7 +17,8 @@ export function executeReduceCommand(expression: string): string {
 
 export function executeReduceVerboseCommand(expression: string): string {
   const node = parse(expression);
-  const reductionHistory = performBetaReductionUntilDone(node);
+  const unfoleded = unfoldAliases(node, BuiltinAliasesMap);
+  const reductionHistory = performBetaReductionUntilDone(unfoleded);
   return reductionHistory.map(stringify).join("\n");
 }
 
