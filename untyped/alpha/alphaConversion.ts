@@ -1,6 +1,5 @@
 import { AbstractionNode } from "../parser/types.ts";
-import { collectFreeVariables } from "./collectFreeVariables.ts";
-import { replaceFreeVariable } from "./replaceFreeVariable.ts";
+import { collectFreeVariables, replaceFreeVariable } from "./variable.ts";
 
 /**
  * Perform alpha convertion on abstraction node.

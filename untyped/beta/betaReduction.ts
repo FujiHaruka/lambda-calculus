@@ -1,4 +1,4 @@
-import { replaceFreeVariable } from "../alpha/replaceFreeVariable.ts";
+import { replaceFreeVariable } from "../alpha/variable.ts";
 import { Node } from "../parser/types.ts";
 import { InfiniteReductionError, MaxReductionExceededError } from "./errors.ts";
 import {
@@ -7,7 +7,7 @@ import {
   findLeftmostOutermostRedex,
   NodeFound,
   replace,
-} from "./nodeUtils.ts";
+} from "./node.ts";
 import { BetaReducibleNode } from "./types.ts";
 
 /**

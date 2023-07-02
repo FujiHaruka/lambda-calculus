@@ -7,7 +7,7 @@ import {
   NodeFound,
   replace,
   slice,
-} from "./nodeUtils.ts";
+} from "./node.ts";
 import { BetaReducibleNode, NodePath } from "./types.ts";
 
 describe(isBetaReducible.name, () => {
