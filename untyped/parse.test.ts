@@ -38,6 +38,10 @@ import { assertSnapshot, assertThrows, it } from "./testUtils.ts";
   "x -> (y z w)",
   "x -> (y -> (z w v))",
   "(x -> y) z w",
+  // TODO
+  // You can omit parentheses in "a -> (b -> c)" because abstraction is right-associative.
+  // "x -> y -> z",
+  // "x -> y -> z -> v w",
 ].forEach((code) => {
   it(`parse "${code}"`, async (t) => {
     await assertSnapshot(t, parse(code));
