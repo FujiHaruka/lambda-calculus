@@ -82,9 +82,12 @@ export const NodeFound = Symbol("NodeFound");
  */
 export function findLeftmostOutermostRedex(
   node: Node,
-): NodePath | typeof NodeFound {
+): { path: NodePath; node: BetaReducibleNode } | typeof NodeFound {
   if (isBetaReducible(node)) {
-    return [];
+    return {
+      node,
+      path: [],
+    };
   }
 
   switch (node.type) {
@@ -92,29 +95,38 @@ export function findLeftmostOutermostRedex(
       return NodeFound;
     }
     case "abstraction": {
-      const maybePath = findLeftmostOutermostRedex(node.body);
-      if (maybePath === NodeFound) {
+      const result = findLeftmostOutermostRedex(node.body);
+      if (result === NodeFound) {
         return NodeFound;
       }
 
-      return ["abstraction_body", ...maybePath];
+      return {
+        node: result.node,
+        path: ["abstraction_body", ...result.path],
+      };
     }
     case "application": {
       if (isBetaReducible(node)) {
-        return [];
+        return {
+          node,
+          path: [],
+        };
       }
 
-      {
-        const maybePath = findLeftmostOutermostRedex(node.left);
-        if (maybePath !== NodeFound) {
-          return ["application_left", ...maybePath];
-        }
+      const leftResult = findLeftmostOutermostRedex(node.left);
+      if (leftResult !== NodeFound) {
+        return {
+          node: leftResult.node,
+          path: ["application_left", ...leftResult.path],
+        };
       }
-      {
-        const maybePath = findLeftmostOutermostRedex(node.right);
-        if (maybePath !== NodeFound) {
-          return ["application_right", ...maybePath];
-        }
+
+      const rightResult = findLeftmostOutermostRedex(node.right);
+      if (rightResult !== NodeFound) {
+        return {
+          node: rightResult.node,
+          path: ["application_right", ...rightResult.path],
+        };
       }
 
       return NodeFound;

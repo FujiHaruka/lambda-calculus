@@ -7,7 +7,7 @@ import {
   replace,
   slice,
 } from "./nodeUtils.ts";
-import { NodePath } from "./types.ts";
+import { BetaReducibleNode, NodePath } from "./types.ts";
 
 describe(isBetaReducible.name, () => {
   const cases: {
@@ -135,7 +135,7 @@ describe(replace.name, () => {
 describe(findLeftmostOutermostRedex.name, () => {
   const cases: {
     code: string;
-    expected: ReturnType<typeof findLeftmostOutermostRedex>;
+    expected: NodePath;
   }[] = [{
     code: "(x -> x) z",
     expected: [],
@@ -155,14 +155,18 @@ describe(findLeftmostOutermostRedex.name, () => {
   cases.forEach(({ code, expected }) => {
     it(`finds redex in "${code}"`, () => {
       const node = parse(code);
-      const result = findLeftmostOutermostRedex(node);
-      assertEquals(result, expected);
+      const result = findLeftmostOutermostRedex(node) as {
+        path: NodePath;
+        node: BetaReducibleNode;
+      };
+      assertEquals(result.path, expected);
+      assertEquals(slice(node, result.path), result.node);
     });
   });
 
   const notFoundCases: {
     code: string;
-    expected: ReturnType<typeof findLeftmostOutermostRedex>;
+    expected: typeof NodeFound;
   }[] = [
     {
       code: "x y",
