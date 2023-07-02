@@ -53,7 +53,7 @@ export function performBetaReductionUntilDone(
     throw new Error("maxReductionCount must be greater than 0");
   }
 
-  const reductionHistory: Node[] = [];
+  const reductionHistory: Node[] = [node];
 
   let reductionCount = 0;
   let currentNode: Node = node;

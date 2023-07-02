@@ -108,13 +108,17 @@ describe(performBetaReductionUntilDone.name, () => {
     expected: string[];
   }[] = [{
     code: "t ((x -> x) z)",
-    expected: ["(t z)"],
+    expected: ["(t ((x -> x) z))", "(t z)"],
   }, {
     code: "((x -> x) z) ((x -> x) z)",
-    expected: ["(z ((x -> x) z))", "(z z)"],
+    expected: ["(((x -> x) z) ((x -> x) z))", "(z ((x -> x) z))", "(z z)"],
   }, {
     code: "t -> ((x -> x) ((x -> x) z))",
-    expected: ["(t -> ((x -> x) z))", "(t -> z)"],
+    expected: [
+      "(t -> ((x -> x) ((x -> x) z)))",
+      "(t -> ((x -> x) z))",
+      "(t -> z)",
+    ],
   }];
 
   cases.forEach(({ code, expected }) => {
