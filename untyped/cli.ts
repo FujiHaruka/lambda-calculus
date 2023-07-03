@@ -1,3 +1,3 @@
-import { startRepl } from "./repl/startRepl.ts";
+import { startRepl } from "./command/startRepl.ts";
 
 startRepl();
