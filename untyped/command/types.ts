@@ -3,6 +3,7 @@ export type CommandType =
   | "validate"
   | "reduce"
   | "assign"
+  | "comment"
   | "exit";
 
 interface BaseCommand {
@@ -29,6 +30,10 @@ export interface AssignCommand extends BaseCommand {
   commandExpression: string;
 }
 
+export interface CommentCommand extends BaseCommand {
+  type: "comment";
+}
+
 export interface ExitCommand extends BaseCommand {
   type: "exit";
 }
@@ -38,4 +43,5 @@ export type Command =
   | ValidateCommand
   | ReduceCommand
   | AssignCommand
+  | CommentCommand
   | ExitCommand;

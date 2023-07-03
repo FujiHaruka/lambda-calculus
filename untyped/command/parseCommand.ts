@@ -54,6 +54,10 @@ export function parseCommand(line: string): Command {
       default:
         throw new UnknownCommandError(commandName);
     }
+  } else if (isComment(line)) {
+    return {
+      type: "comment",
+    };
   } else if (containsEqualSymbol(line)) {
     // TODO: it assumes the line contains at most one "=", but we should consider multiple assignments.
     const [aliasIdentifier, commandExpression] = line.split("=").map((str) =>
@@ -74,6 +78,10 @@ export function parseCommand(line: string): Command {
 
 function startsWithUpperCase(str: string): boolean {
   return /^[A-Z]/.test(str);
+}
+
+function isComment(str: string): boolean {
+  return /^#/.test(str);
 }
 
 function includesLineBreak(str: string): boolean {

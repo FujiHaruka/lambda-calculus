@@ -27,9 +27,10 @@ export class Repl {
           return this.#executeValidateCommand(command);
         case "reduce":
           return this.#executeReduceCommand(command).join("\n");
-        case "assign": {
+        case "assign":
           return this.#executeAssignCommand(command);
-        }
+        case "comment":
+          return "";
         default: {
           assertNever(command);
         }
