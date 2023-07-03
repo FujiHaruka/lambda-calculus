@@ -21,3 +21,9 @@ export class CommandArgumentUnexpectedError extends Error {
     super(`Command "${command}" does not expect an argument`);
   }
 }
+
+export class UnsupportedRightHandSideCommandError extends Error {
+  constructor(command: string) {
+    super(`Command "${command}" does not support right hand side`);
+  }
+}

@@ -26,7 +26,7 @@ export interface ReduceCommand extends BaseCommand {
 export interface AssignCommand extends BaseCommand {
   type: "assign";
   aliasIdentifier: string;
-  expression: string;
+  commandExpression: string;
 }
 
 export interface ExitCommand extends BaseCommand {

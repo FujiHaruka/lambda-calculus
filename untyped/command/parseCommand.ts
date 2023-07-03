@@ -56,13 +56,13 @@ export function parseCommand(line: string): Command {
     }
   } else if (containsEqualSymbol(line)) {
     // TODO: it assumes the line contains at most one "=", but we should consider multiple assignments.
-    const [aliasIdentifier, expression] = line.split("=").map((str) =>
+    const [aliasIdentifier, commandExpression] = line.split("=").map((str) =>
       str.trim()
     );
     return {
       type: "assign",
       aliasIdentifier,
-      expression,
+      commandExpression,
     };
   } else {
     return {
