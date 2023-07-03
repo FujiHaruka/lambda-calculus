@@ -54,6 +54,14 @@ export function parseCommand(line: string): Command {
       default:
         throw new UnknownCommandError(commandName);
     }
+  } else if (containsAssignment(line)) {
+    // TODO: it assumes the line contains at most one ":=", but we should consider multiple assignments.
+    const [aliasIdentifier, expression] = line.split(":=");
+    return {
+      type: "assign",
+      aliasIdentifier: aliasIdentifier,
+      expression: expression,
+    };
   } else {
     return {
       type: "validate",
@@ -68,4 +76,8 @@ function startsWithUpperCase(str: string): boolean {
 
 function includesLineBreak(str: string): boolean {
   return /\n/.test(str);
+}
+
+function containsAssignment(str: string): boolean {
+  return /:=/.test(str);
 }

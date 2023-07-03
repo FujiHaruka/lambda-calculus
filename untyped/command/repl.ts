@@ -16,6 +16,8 @@ export class Repl {
           return executeValidateCommand(command.expression);
         case "reduce":
           return executeReduceCommand(command.expression);
+        case "assign":
+          return "TODO";
         default: {
           assertNever(command);
         }
