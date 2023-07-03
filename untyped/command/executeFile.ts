@@ -1,6 +1,9 @@
 import { Repl } from "./repl.ts";
 
-export function executeFile(script: string): void {
+export function executeFile(
+  script: string,
+  print: (str: string) => void = console.log,
+): void {
   const repl = new Repl();
 
   const lines = script.split("\n")
@@ -8,10 +11,10 @@ export function executeFile(script: string): void {
     .filter(Boolean);
 
   for (const line of lines) {
-    console.log(`> ${line}`);
+    print(`> ${line}`);
     const out = repl.eval(line);
     if (out) {
-      console.log(out);
+      print(out);
     }
   }
 }
