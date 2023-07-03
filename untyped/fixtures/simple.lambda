@@ -1,0 +1,9 @@
+$id = x -> x
+
+# Reduced to "f"
+REDUCE $id f
+
+$y  = x -> y
+
+# Reduced to "y"
+REDUCE $y f
