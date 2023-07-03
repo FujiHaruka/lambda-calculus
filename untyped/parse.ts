@@ -4,7 +4,7 @@ import {
   ParenthesisNotClosedError,
   UnexpectedTokenError,
 } from "./parser/errors.ts";
-import { Node } from "./parser/types.ts";
+import { AbstractionNode, Node, VariableNode } from "./parser/types.ts";
 import { tokenize } from "./tokenize.ts";
 import { PartialNode } from "./parser/PartialNode.ts";
 
@@ -29,6 +29,7 @@ export function parse(code: string): Node {
       // "(a b" + "c"
       token.type === "var" &&
       node &&
+      node.type !== "abstraction" &&
       node.isNode() &&
       !node.rightParen
     ) {
@@ -44,6 +45,38 @@ export function parse(code: string): Node {
         leftParen: node.leftParen,
       });
       stack.push(nextNode);
+    } else if (
+      // e.g.
+      // "a -> b" + "c"
+      // "(a -> b" + "c"
+      token.type === "var" &&
+      node &&
+      node.type === "abstraction" &&
+      node.isNode() &&
+      !node.rightParen
+    ) {
+      stack.pop();
+      const abstractionNode = node.toNode() as AbstractionNode;
+      stack.push(
+        new PartialNode({
+          type: "abstraction",
+          bound: abstractionNode.bound,
+        }, {
+          leftParen: node.leftParen,
+        }),
+      );
+      stack.push(
+        new PartialNode({
+          type: "application",
+          left: abstractionNode.body,
+          right: {
+            type: "var",
+            identifier: value(token),
+          },
+        }, {
+          leftParen: false,
+        }),
+      );
     } else if (
       // e.g.
       // "(" + "a"
@@ -244,14 +277,54 @@ export function parse(code: string): Node {
       );
     } else if (
       // e.g.
+      // "a -> b" + "->"
+      // "(a -> b" + "->"
+      token.type === "arrow" &&
+      node &&
+      node.type === "abstraction" &&
+      node.isNode() &&
+      node.child?.type === "var" &&
+      !node.rightParen
+    ) {
+      const abstractionNode = node.toNode() as AbstractionNode;
+      const body = abstractionNode.body as VariableNode;
+      stack.pop();
+      stack.push(
+        new PartialNode({
+          type: "abstraction",
+          bound: abstractionNode.bound,
+        }, {
+          leftParen: node.leftParen,
+        }),
+      );
+      stack.push(
+        new PartialNode({
+          type: "abstraction",
+          bound: body.identifier,
+        }, {
+          leftParen: false,
+        }),
+      );
+    } else if (
+      // e.g.
       // "a -> b" + "EOF"
       token.type === "eof" &&
       node &&
       !node.leftParen &&
       node.isNode()
     ) {
-      const node = stack.pop();
-      return node.toNode();
+      let resultNode = node.toNode();
+      stack.pop();
+      // Reduce until root node
+      while (!stack.empty() && stack.top()?.type !== "root") {
+        const node = stack.pop();
+        if (node.isComplete()) {
+          throw new Error("Unexpected error");
+        }
+        node.setChild(resultNode);
+        resultNode = node.toNode();
+      }
+      return resultNode;
     } else if (
       // e.g.
       // "(a -> b)" + "EOF"

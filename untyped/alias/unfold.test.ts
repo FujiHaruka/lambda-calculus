@@ -7,7 +7,7 @@ describe(unfoldAliases.name, () => {
   it("replaces alias variables with their expressions", () => {
     const node = parse("$TRUE x");
     const unfolded = unfoldAliases(node, BuiltinAliasesMap);
-    assertEquals(unfolded, parse("t -> (f -> t) x"));
+    assertEquals(unfolded, parse("(t -> (f -> t)) x"));
   });
 
   it("replaces alias variables with their expressions recursively", () => {

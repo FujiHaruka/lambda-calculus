@@ -6,9 +6,9 @@ import { unfoldAliases } from "./unfold.ts";
 
 it("all built-in aliases are valid", () => {
   for (const alias of BuiltinAliasesMap.values()) {
-    alias.toNode()
+    alias.toNode();
   }
-})
+});
 
 describe("$AND", () => {
   const cases: { input: string; expected: string }[] = [

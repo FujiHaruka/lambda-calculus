@@ -864,3 +864,106 @@ snapshot[`parse "(x -> y) z w" 1`] = `
   type: "application",
 }
 `;
+
+snapshot[`parse "x -> y -> z" 1`] = `
+{
+  body: {
+    body: {
+      identifier: "z",
+      type: "var",
+    },
+    bound: "y",
+    type: "abstraction",
+  },
+  bound: "x",
+  type: "abstraction",
+}
+`;
+
+snapshot[`parse "x -> y -> z -> w" 1`] = `
+{
+  body: {
+    body: {
+      body: {
+        identifier: "w",
+        type: "var",
+      },
+      bound: "z",
+      type: "abstraction",
+    },
+    bound: "y",
+    type: "abstraction",
+  },
+  bound: "x",
+  type: "abstraction",
+}
+`;
+
+snapshot[`parse "x -> y z" 1`] = `
+{
+  body: {
+    left: {
+      identifier: "y",
+      type: "var",
+    },
+    right: {
+      identifier: "z",
+      type: "var",
+    },
+    type: "application",
+  },
+  bound: "x",
+  type: "abstraction",
+}
+`;
+
+snapshot[`parse "x -> y -> z -> v w" 1`] = `
+{
+  body: {
+    body: {
+      body: {
+        left: {
+          identifier: "v",
+          type: "var",
+        },
+        right: {
+          identifier: "w",
+          type: "var",
+        },
+        type: "application",
+      },
+      bound: "z",
+      type: "abstraction",
+    },
+    bound: "y",
+    type: "abstraction",
+  },
+  bound: "x",
+  type: "abstraction",
+}
+`;
+
+snapshot[`parse "x -> y z w" 1`] = `
+{
+  body: {
+    left: {
+      left: {
+        identifier: "y",
+        type: "var",
+      },
+      right: {
+        identifier: "z",
+        type: "var",
+      },
+      type: "application",
+    },
+    right: {
+      identifier: "w",
+      type: "var",
+    },
+    type: "application",
+  },
+  bound: "x",
+  type: "abstraction",
+}
+`;
