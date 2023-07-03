@@ -54,13 +54,15 @@ export function parseCommand(line: string): Command {
       default:
         throw new UnknownCommandError(commandName);
     }
-  } else if (containsAssignment(line)) {
-    // TODO: it assumes the line contains at most one ":=", but we should consider multiple assignments.
-    const [aliasIdentifier, expression] = line.split(":=");
+  } else if (containsEqualSymbol(line)) {
+    // TODO: it assumes the line contains at most one "=", but we should consider multiple assignments.
+    const [aliasIdentifier, expression] = line.split("=").map((str) =>
+      str.trim()
+    );
     return {
       type: "assign",
-      aliasIdentifier: aliasIdentifier,
-      expression: expression,
+      aliasIdentifier,
+      expression,
     };
   } else {
     return {
@@ -78,6 +80,6 @@ function includesLineBreak(str: string): boolean {
   return /\n/.test(str);
 }
 
-function containsAssignment(str: string): boolean {
-  return /:=/.test(str);
+function containsEqualSymbol(str: string): boolean {
+  return /=/.test(str);
 }
