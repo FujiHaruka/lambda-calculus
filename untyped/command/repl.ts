@@ -1,9 +1,5 @@
 import { assertNever } from "../utils.ts";
-import {
-  executeReduceCommand,
-  executeReduceVerboseCommand,
-  executeValidateCommand,
-} from "./commands.ts";
+import { executeReduceCommand, executeValidateCommand } from "./commands.ts";
 import { parseCommand } from "./parseCommand.ts";
 
 export class Repl {
@@ -20,8 +16,6 @@ export class Repl {
           return executeValidateCommand(command.expression);
         case "reduce":
           return executeReduceCommand(command.expression);
-        case "reduce_verbose":
-          return executeReduceVerboseCommand(command.expression);
         default: {
           assertNever(command);
         }

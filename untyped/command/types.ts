@@ -2,7 +2,6 @@ export type CommandType =
   | "empty"
   | "validate"
   | "reduce"
-  | "reduce_verbose"
   | "exit";
 
 interface BaseCommand {
@@ -23,11 +22,6 @@ export interface ReduceCommand extends BaseCommand {
   expression: string;
 }
 
-export interface ReduceVerboseCommand extends BaseCommand {
-  type: "reduce_verbose";
-  expression: string;
-}
-
 export interface ExitCommand extends BaseCommand {
   type: "exit";
 }
@@ -36,5 +30,4 @@ export type Command =
   | EmptyCommand
   | ValidateCommand
   | ReduceCommand
-  | ReduceVerboseCommand
   | ExitCommand;

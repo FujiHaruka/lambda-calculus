@@ -8,17 +8,6 @@ export function executeReduceCommand(expression: string): string {
   const node = parse(expression);
   const unfoleded = unfoldAliases(node, BuiltinAliasesMap);
   const reductionHistory = performBetaReductionUntilDone(unfoleded);
-  if (reductionHistory.length === 0) {
-    throw new Error("Unexpected empty reduction history");
-  } else {
-    return stringify(reductionHistory[reductionHistory.length - 1]);
-  }
-}
-
-export function executeReduceVerboseCommand(expression: string): string {
-  const node = parse(expression);
-  const unfoleded = unfoldAliases(node, BuiltinAliasesMap);
-  const reductionHistory = performBetaReductionUntilDone(unfoleded);
   return reductionHistory.map(stringify).join("\n");
 }
 

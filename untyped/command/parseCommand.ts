@@ -9,7 +9,6 @@ import { Command } from "./types.ts";
 const Commands = {
   EXIT: "EXIT",
   REDUCE: "REDUCE",
-  REDUCE_V: "REDUCE_V",
 } as const;
 
 const NO_ARG_COMMAND_PATTERN = /^[A-Z_]+$/;
@@ -34,7 +33,6 @@ export function parseCommand(line: string): Command {
         case Commands.EXIT:
           return { type: "exit" };
         case Commands.REDUCE:
-        case Commands.REDUCE_V:
           throw new CommandArgumentExpectedError(line);
         default:
           throw new UnknownCommandError(line);
@@ -51,8 +49,6 @@ export function parseCommand(line: string): Command {
     switch (commandName) {
       case Commands.REDUCE:
         return { type: "reduce", expression: arg };
-      case Commands.REDUCE_V:
-        return { type: "reduce_verbose", expression: arg };
       case Commands.EXIT:
         throw new CommandArgumentUnexpectedError(commandName);
       default:

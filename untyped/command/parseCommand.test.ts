@@ -22,13 +22,6 @@ it("returns reduce command for REDUCE", () => {
   });
 });
 
-it("returns reduce_verbose command for REDUCE_V", () => {
-  assertEquals(parseCommand("REDUCE_V x -> y"), {
-    type: "reduce_verbose",
-    expression: "x -> y",
-  });
-});
-
 it("returns validate command if the line does not starts with upper case letter", () => {
   assertEquals(parseCommand("x -> y"), {
     type: "validate",
