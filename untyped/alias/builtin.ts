@@ -22,6 +22,10 @@ export const BuiltinAliases: ExpressionAlias[] = [
     identifier: "$NOT",
     expression: "p -> (p $FALSE $TRUE)",
   },
+  {
+    identifier: "$IF",
+    expression: "p -> (a -> (b -> (p a b)))",
+  },
   // Natural numbers
   {
     identifier: "$0",
@@ -75,6 +79,30 @@ export const BuiltinAliases: ExpressionAlias[] = [
   {
     identifier: "$PLUS",
     expression: "m -> (n -> (s -> (z -> (m s (n s z)))))",
+  },
+  {
+    identifier: "$MULT",
+    expression: "m -> (n -> (n ($PLUS m) $0))",
+  },
+  {
+    identifier: "$PAIR",
+    expression: "x -> (y -> (f -> (f x y)))",
+  },
+  {
+    identifier: "$FIRST",
+    expression: "p -> (p (x -> (y -> x)))",
+  },
+  {
+    identifier: "$SECOND",
+    expression: "p -> (p (x -> (y -> y)))",
+  },
+  {
+    identifier: "$PRED",
+    expression: "n -> f -> x -> (n (g -> (h -> (h (g f)))) (u -> x) (u -> u))",
+  },
+  {
+    identifier: "$SUB",
+    expression: "m -> (n -> ((n $PRED) m))",
   },
 ].map((alias) => new ExpressionAlias(alias));
 
