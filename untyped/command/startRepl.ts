@@ -1,6 +1,6 @@
 import { Repl } from "./repl.ts";
 
-export function startRepl() {
+export function startRepl(): void {
   const repl = new Repl();
 
   console.log("Lambda calculus");
