@@ -43,7 +43,7 @@ import { assertSnapshot, assertThrows, it } from "./testUtils.ts";
   "(x -> y) z w",
   // You can omit parentheses in "a -> (b -> c)" because abstraction is right-associative.
   "x -> y -> z",
-  "(x -> y -> z)", // TODO: This is not supported yet.
+  "(x -> y -> z)",
   "x -> y -> z -> w",
   "x -> y z",
   "x -> y -> z -> v w",

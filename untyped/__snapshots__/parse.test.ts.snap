@@ -983,6 +983,31 @@ snapshot[`parse "x -> y z w" 1`] = `
 }
 `;
 
+snapshot[`parse "x -> y (z w)" 1`] = `
+{
+  body: {
+    left: {
+      identifier: "y",
+      type: "var",
+    },
+    right: {
+      left: {
+        identifier: "z",
+        type: "var",
+      },
+      right: {
+        identifier: "w",
+        type: "var",
+      },
+      type: "application",
+    },
+    type: "application",
+  },
+  bound: "x",
+  type: "abstraction",
+}
+`;
+
 snapshot[`parse "x -> (y z) w" 1`] = `
 {
   body: {

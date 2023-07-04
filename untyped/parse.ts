@@ -4,7 +4,12 @@ import {
   ParenthesisNotClosedError,
   UnexpectedTokenError,
 } from "./parser/errors.ts";
-import { AbstractionNode, Node, VariableNode } from "./parser/types.ts";
+import {
+  AbstractionNode,
+  ApplicationNode,
+  Node,
+  VariableNode,
+} from "./parser/types.ts";
 import { tokenize } from "./tokenize.ts";
 import { PartialNode } from "./parser/PartialNode.ts";
 
@@ -222,10 +227,34 @@ export function parse(code: string): Node {
       stack.pop();
       const top = stack.pop();
       switch (top.type) {
-        case "abstraction":
+        case "abstraction": {
+          if (top.hasChild()) {
+            // e.g.
+            // "x -> y (z w" + ")"
+            const abstractionNode = top.toNode() as AbstractionNode;
+            const applicationNode: ApplicationNode = {
+              type: "application",
+              left: top.child!,
+              right: node.toNode(),
+            };
+            const nextNode = new PartialNode({
+              type: "abstraction",
+              bound: abstractionNode.bound,
+              body: applicationNode,
+            }, {
+              leftParen: top.leftParen,
+            });
+            stack.push(nextNode);
+          } else {
+            // e.g.
+            // "(x -> (y -> z" + ")"
+            top.setChild(node.toNode());
+            stack.push(top);
+          }
+          break;
+        }
         case "application": {
           // e.g.
-          // "(x -> (y -> z" + ")"
           // "(x (y z" + ")"
           top.setChild(node.toNode());
           stack.push(top);
