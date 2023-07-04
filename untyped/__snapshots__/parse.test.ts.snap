@@ -880,6 +880,21 @@ snapshot[`parse "x -> y -> z" 1`] = `
 }
 `;
 
+snapshot[`parse "(x -> y -> z)" 1`] = `
+{
+  body: {
+    body: {
+      identifier: "z",
+      type: "var",
+    },
+    bound: "y",
+    type: "abstraction",
+  },
+  bound: "x",
+  type: "abstraction",
+}
+`;
+
 snapshot[`parse "x -> y -> z -> w" 1`] = `
 {
   body: {
@@ -944,6 +959,31 @@ snapshot[`parse "x -> y -> z -> v w" 1`] = `
 `;
 
 snapshot[`parse "x -> y z w" 1`] = `
+{
+  body: {
+    left: {
+      left: {
+        identifier: "y",
+        type: "var",
+      },
+      right: {
+        identifier: "z",
+        type: "var",
+      },
+      type: "application",
+    },
+    right: {
+      identifier: "w",
+      type: "var",
+    },
+    type: "application",
+  },
+  bound: "x",
+  type: "abstraction",
+}
+`;
+
+snapshot[`parse "x -> (y z) w" 1`] = `
 {
   body: {
     left: {

@@ -262,6 +262,43 @@ export function parse(code: string): Node {
       }
     } else if (
       // e.g.
+      // "(a -> b -> c" + ")"
+      // "(a -> b -> c -> d" + ")"
+      token.type === "right_paren" &&
+      node &&
+      node.type === "abstraction" &&
+      node.isComplete()
+    ) {
+      let childNode = node.toNode() as AbstractionNode;
+      stack.pop();
+
+      const top = stack.top();
+      while (
+        top &&
+        top.type === "abstraction" &&
+        !top.hasChild() &&
+        !top.leftParen
+      ) {
+        top.setChild(childNode);
+        childNode = top.toNode() as AbstractionNode;
+        stack.pop();
+      }
+
+      const nextNode = stack.pop();
+      if (
+        nextNode &&
+        nextNode.type === "abstraction" &&
+        !nextNode.hasChild() &&
+        nextNode.leftParen
+      ) {
+        nextNode.setChild(childNode);
+        nextNode.rightParen = true;
+        stack.push(nextNode);
+      } else {
+        throw new UnexpectedTokenError({ token, code });
+      }
+    } else if (
+      // e.g.
       // "(a" + "->"
       token.type === "arrow" &&
       node && node.type === "any" && node.child && node.child.type === "var"
