@@ -85,18 +85,6 @@ export const BuiltinAliases: ExpressionAlias[] = [
     expression: "m -> (n -> (n ($PLUS m) $0))",
   },
   {
-    identifier: "$PAIR",
-    expression: "x -> (y -> (f -> (f x y)))",
-  },
-  {
-    identifier: "$FIRST",
-    expression: "p -> (p (x -> (y -> x)))",
-  },
-  {
-    identifier: "$SECOND",
-    expression: "p -> (p (x -> (y -> y)))",
-  },
-  {
     identifier: "$PRED",
     expression: "n -> f -> x -> (n (g -> (h -> (h (g f)))) (u -> x) (u -> u))",
   },

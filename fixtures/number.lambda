@@ -1,0 +1,29 @@
+$x = REDUCE $IS_ZERO $0
+ALPHA_EQ $x, $TRUE
+
+$x = REDUCE $IS_ZERO $1
+ALPHA_EQ $x, $FALSE
+
+$x = REDUCE $SUCC $0
+ALPHA_EQ $x, $1
+
+$x = REDUCE $SUCC $1
+ALPHA_EQ $x, $2
+
+$x = REDUCE $PLUS $1 $1
+ALPHA_EQ $x, $2
+
+$x = REDUCE $PLUS $2 $3
+ALPHA_EQ $x, $5
+
+$x = REDUCE $PLUS $2 $3
+ALPHA_EQ $x, $5
+
+$x = REDUCE $MULT $2 $3
+ALPHA_EQ $x, $6
+
+$x = REDUCE $PRED $1
+ALPHA_EQ $x, $0
+
+$x = REDUCE $SUB $5 $2
+ALPHA_EQ $x, $3
