@@ -1,0 +1,9 @@
+# Yes
+ALPHA_EQ x -> x, t -> t
+
+# No
+ALPHA_EQ x -> y, x -> t
+
+$n = REDUCE $PLUS $1 $1
+# Yes
+ALPHA_EQ $n, $2

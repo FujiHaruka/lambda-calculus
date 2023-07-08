@@ -17,6 +17,34 @@ y",
 ]
 `;
 
+snapshot[`executes alpha_eq.lambda 1`] = `
+[
+  "> # Yes",
+  "> ALPHA_EQ x -> x, t -> t",
+  "Yes",
+  "> # No",
+  "> ALPHA_EQ x -> y, x -> t",
+  "No",
+  "> \$n = REDUCE \$PLUS \$1 \$1",
+  "(((m -> (n -> (s -> (z -> ((m s) ((n s) z)))))) (s -> (z -> (s z)))) (s -> (z -> (s z))))
+" +
+    "((n -> (s -> (z -> (((s -> (z -> (s z))) s) ((n s) z))))) (s -> (z -> (s z))))
+" +
+    "(s -> (z -> (((s -> (z -> (s z))) s) (((s -> (z -> (s z))) s) z))))
+" +
+    "(s -> (z -> ((z -> (s z)) (((s -> (z -> (s z))) s) z))))
+" +
+    "(s -> (z -> (s (((s -> (z -> (s z))) s) z))))
+" +
+    "(s -> (z -> (s ((z -> (s z)) z))))
+" +
+    "(s -> (z -> (s (s z))))",
+  "> # Yes",
+  "> ALPHA_EQ \$n, \$2",
+  "Yes",
+]
+`;
+
 snapshot[`executes bool.lambda 1`] = `
 [
   "> \$TRUE",
