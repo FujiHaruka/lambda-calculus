@@ -3,6 +3,7 @@ import {
   CommandArgumentExpectedError,
   CommandArgumentUnexpectedError,
   CommandExpectedError,
+  CommandUnexpectedArgumentsError,
   UnknownCommandError,
 } from "./errors.ts";
 import { parseCommand } from "./parseCommand.ts";
@@ -19,6 +20,14 @@ it("returns reduce command for REDUCE", () => {
   assertEquals(parseCommand("REDUCE x -> y"), {
     type: "reduce",
     expression: "x -> y",
+  });
+});
+
+it("returns eq command for ALPHA_EQ", () => {
+  assertEquals(parseCommand("ALPHA_EQ x -> y, y -> x"), {
+    type: "eq",
+    expressionA: "x -> y",
+    expressionB: "y -> x",
   });
 });
 
@@ -61,4 +70,22 @@ it("throws for arg command without arg", () => {
 
 it("throws for mult-line input", () => {
   assertThrows(() => parseCommand("x\ny"));
+});
+
+it("throws for ALPHA_EQ without args", () => {
+  assertThrows(() => parseCommand("ALPHA_EQ"), CommandArgumentExpectedError);
+});
+
+it("throws for ALPHA_EQ with one arg", () => {
+  assertThrows(
+    () => parseCommand("ALPHA_EQ x -> y"),
+    CommandUnexpectedArgumentsError,
+  );
+});
+
+it("throws for ALPHA_EQ with more than two args", () => {
+  assertThrows(
+    () => parseCommand("ALPHA_EQ x, y, z"),
+    CommandUnexpectedArgumentsError,
+  );
 });

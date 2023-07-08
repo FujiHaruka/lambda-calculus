@@ -27,3 +27,11 @@ export class UnsupportedRightHandSideCommandError extends Error {
     super(`Command "${command}" does not support right hand side`);
   }
 }
+
+export class CommandUnexpectedArgumentsError extends Error {
+  constructor(command: string, expected: number, actual: number) {
+    super(
+      `Command "${command}" expects ${expected} arguments, but got ${actual}`,
+    );
+  }
+}

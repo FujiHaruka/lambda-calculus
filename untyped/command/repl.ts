@@ -1,13 +1,19 @@
 import { ExpressionAlias } from "../alias/alias.ts";
 import { BuiltinAliasesMap } from "../alias/builtin.ts";
 import { unfoldAliases } from "../alias/unfold.ts";
+import { isAlphaEquivalent } from "../alpha/alphaEquivalence.ts";
 import { performBetaReductionUntilDone } from "../beta/betaReduction.ts";
 import { parse } from "../parse.ts";
 import { stringify } from "../stringify.ts";
 import { assertNever } from "../utils.ts";
 import { UnsupportedRightHandSideCommandError } from "./errors.ts";
 import { parseCommand } from "./parseCommand.ts";
-import { AssignCommand, ReduceCommand, ValidateCommand } from "./types.ts";
+import {
+  AlphaEquivalentCommand,
+  AssignCommand,
+  ReduceCommand,
+  ValidateCommand,
+} from "./types.ts";
 
 export class Repl {
   aliases = new Map<string, ExpressionAlias>(
@@ -27,6 +33,8 @@ export class Repl {
           return this.#executeValidateCommand(command);
         case "reduce":
           return this.#executeReduceCommand(command).join("\n");
+        case "eq":
+          return this.#executeAlphaEquivalentCommand(command);
         case "assign":
           return this.#executeAssignCommand(command);
         case "comment":
@@ -59,6 +67,15 @@ export class Repl {
     }
 
     return reductionHistory.map(stringify);
+  }
+
+  #executeAlphaEquivalentCommand(command: AlphaEquivalentCommand): string {
+    const { expressionA, expressionB } = command;
+    const nodeA = parse(expressionA);
+    const nodeB = parse(expressionB);
+    const unfolededA = unfoldAliases(nodeA, this.aliases);
+    const unfolededB = unfoldAliases(nodeB, this.aliases);
+    return isAlphaEquivalent(unfolededA, unfolededB) ? "Yes" : "No";
   }
 
   #executeAssignCommand(command: AssignCommand): string {

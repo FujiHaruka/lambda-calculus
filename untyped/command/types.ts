@@ -1,6 +1,7 @@
 export type CommandType =
   | "empty"
   | "validate"
+  | "eq"
   | "reduce"
   | "assign"
   | "comment"
@@ -24,6 +25,12 @@ export interface ReduceCommand extends BaseCommand {
   expression: string;
 }
 
+export interface AlphaEquivalentCommand extends BaseCommand {
+  type: "eq";
+  expressionA: string;
+  expressionB: string;
+}
+
 export interface AssignCommand extends BaseCommand {
   type: "assign";
   aliasIdentifier: string;
@@ -42,6 +49,7 @@ export type Command =
   | EmptyCommand
   | ValidateCommand
   | ReduceCommand
+  | AlphaEquivalentCommand
   | AssignCommand
   | CommentCommand
   | ExitCommand;

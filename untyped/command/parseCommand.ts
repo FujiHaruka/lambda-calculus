@@ -2,6 +2,7 @@ import {
   CommandArgumentExpectedError,
   CommandArgumentUnexpectedError,
   CommandExpectedError,
+  CommandUnexpectedArgumentsError,
   UnknownCommandError,
 } from "./errors.ts";
 import { Command } from "./types.ts";
@@ -9,6 +10,7 @@ import { Command } from "./types.ts";
 const Commands = {
   EXIT: "EXIT",
   REDUCE: "REDUCE",
+  ALPHA_EQ: "ALPHA_EQ",
 } as const;
 
 const NO_ARG_COMMAND_PATTERN = /^[A-Z_]+$/;
@@ -33,6 +35,7 @@ export function parseCommand(line: string): Command {
         case Commands.EXIT:
           return { type: "exit" };
         case Commands.REDUCE:
+        case Commands.ALPHA_EQ:
           throw new CommandArgumentExpectedError(line);
         default:
           throw new UnknownCommandError(line);
@@ -49,6 +52,21 @@ export function parseCommand(line: string): Command {
     switch (commandName) {
       case Commands.REDUCE:
         return { type: "reduce", expression: arg };
+      case Commands.ALPHA_EQ: {
+        const expressions = arg.split(",").map((str) => str.trim());
+        if (expressions.length !== 2) {
+          throw new CommandUnexpectedArgumentsError(
+            commandName,
+            2,
+            expressions.length,
+          );
+        }
+        return {
+          type: "eq",
+          expressionA: expressions[0],
+          expressionB: expressions[1],
+        };
+      }
       case Commands.EXIT:
         throw new CommandArgumentUnexpectedError(commandName);
       default:
