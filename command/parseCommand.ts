@@ -11,6 +11,7 @@ const Commands = {
   EXIT: "EXIT",
   REDUCE: "REDUCE",
   ALPHA_EQ: "ALPHA_EQ",
+  LIST: "LIST",
 } as const;
 
 const NO_ARG_COMMAND_PATTERN = /^[A-Z_]+$/;
@@ -34,6 +35,8 @@ export function parseCommand(line: string): Command {
       switch (line) {
         case Commands.EXIT:
           return { type: "exit" };
+        case Commands.LIST:
+          return { type: "list" };
         case Commands.REDUCE:
         case Commands.ALPHA_EQ:
           throw new CommandArgumentExpectedError(line);
@@ -67,6 +70,7 @@ export function parseCommand(line: string): Command {
           expressionB: expressions[1],
         };
       }
+      case Commands.LIST:
       case Commands.EXIT:
         throw new CommandArgumentUnexpectedError(commandName);
       default:

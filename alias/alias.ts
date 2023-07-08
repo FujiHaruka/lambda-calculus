@@ -5,11 +5,15 @@ import { PlainExpressionAlias } from "./types.ts";
 export class ExpressionAlias {
   readonly identifier: string;
   readonly expression: string;
+  readonly usage?: string;
+  readonly example?: string;
   #node: Node | undefined;
 
   constructor({
     identifier,
     expression,
+    usage,
+    example,
   }: PlainExpressionAlias) {
     if (!identifier.startsWith("$")) {
       throw new Error(`Alias identifier must start with "$": "${identifier}"`);
@@ -17,6 +21,8 @@ export class ExpressionAlias {
 
     this.identifier = identifier;
     this.expression = expression;
+    this.usage = usage;
+    this.example = example;
   }
 
   toNode(): Node {

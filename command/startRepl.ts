@@ -1,3 +1,4 @@
+import { color } from "../deps.ts";
 import { Repl } from "./repl.ts";
 
 export function startRepl(): void {
@@ -6,7 +7,7 @@ export function startRepl(): void {
   console.log("Lambda calculus");
   console.log("exit using ctrl+c or EXIT");
   while (true) {
-    const line = prompt(">") ?? "";
+    const line = prompt(color.green(">")) ?? "";
     const out = repl.eval(line);
     if (out) {
       console.log(out);

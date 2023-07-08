@@ -4,6 +4,7 @@ export type CommandType =
   | "eq"
   | "reduce"
   | "assign"
+  | "list"
   | "comment"
   | "exit";
 
@@ -37,6 +38,10 @@ export interface AssignCommand extends BaseCommand {
   commandExpression: string;
 }
 
+export interface ListCommand extends BaseCommand {
+  type: "list";
+}
+
 export interface CommentCommand extends BaseCommand {
   type: "comment";
 }
@@ -51,5 +56,6 @@ export type Command =
   | ReduceCommand
   | AlphaEquivalentCommand
   | AssignCommand
+  | ListCommand
   | CommentCommand
   | ExitCommand;

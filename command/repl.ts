@@ -3,6 +3,7 @@ import { BuiltinAliasesMap } from "../alias/builtin.ts";
 import { unfoldAliases } from "../alias/unfold.ts";
 import { isAlphaEquivalent } from "../alpha/alphaEquivalence.ts";
 import { performBetaReductionUntilDone } from "../beta/betaReduction.ts";
+import { color } from "../deps.ts";
 import { parse } from "../parser/parse.ts";
 import { stringify } from "../parser/stringify.ts";
 import { assertNever } from "../utils/utils.ts";
@@ -37,6 +38,8 @@ export class Repl {
           return this.#executeAlphaEquivalentCommand(command);
         case "assign":
           return this.#executeAssignCommand(command);
+        case "list":
+          return this.#executeListCommand();
         case "comment":
           return "";
         default: {
@@ -48,7 +51,7 @@ export class Repl {
         throw err;
       }
 
-      return `${err.name}: ${err.message}`;
+      return `${color.red(err.name)}: ${err.message}`;
     }
   }
 
@@ -115,5 +118,22 @@ export class Repl {
     );
 
     return result;
+  }
+
+  #executeListCommand(): string {
+    const builtinAliaes = [...BuiltinAliasesMap.values()];
+    const aliasStrings = builtinAliaes.map((alias) => {
+      const { identifier, expression, usage, example } = alias;
+      return [
+        `${color.bold(identifier)} = ${expression}`,
+        usage && `usage  : ${usage}`,
+        example && `example: ${example}`,
+      ].filter(Boolean).join("\n") + "\n";
+    });
+    return [
+      "Builtin aliases",
+      "===============",
+      ...aliasStrings,
+    ].join("\n");
   }
 }
