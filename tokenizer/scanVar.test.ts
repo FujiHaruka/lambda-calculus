@@ -1,4 +1,4 @@
-import { assertEquals, it } from "../testUtils.ts";
+import { assertEquals, it } from "../utils/testUtils.ts";
 import { TokenizerContext } from "./TokenizerContext.ts";
 import { scanVar } from "./scanVar.ts";
 

@@ -1,5 +1,5 @@
 import { parse } from "./parse.ts";
-import { assertSnapshot, assertThrows, it } from "./testUtils.ts";
+import { assertSnapshot, assertThrows, it } from "../utils/testUtils.ts";
 
 [
   // Single variable.

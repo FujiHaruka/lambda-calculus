@@ -1,5 +1,5 @@
-import { parse } from "../parse.ts";
-import { assertEquals, assertThrows, describe, it } from "../testUtils.ts";
+import { parse } from "../parser/parse.ts";
+import { assertEquals, assertThrows, describe, it } from "../utils/testUtils.ts";
 import {
   equal,
   findLeftmostOutermostRedex,

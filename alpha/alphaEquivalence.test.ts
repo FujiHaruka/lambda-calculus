@@ -1,5 +1,5 @@
-import { parse } from "../parse.ts";
-import { assertEquals, describe, it } from "../testUtils.ts";
+import { parse } from "../parser/parse.ts";
+import { assertEquals, describe, it } from "../utils/testUtils.ts";
 import { isAlphaEquivalent, NodeNormalizer } from "./alphaEquivalence.ts";
 
 describe(NodeNormalizer.name, () => {

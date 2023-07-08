@@ -1,4 +1,4 @@
-import { assertSnapshot, it, path, walkSync } from "../testUtils.ts";
+import { assertSnapshot, it, path, walkSync } from "../utils/testUtils.ts";
 import { executeFile } from "./executeFile.ts";
 
 const fixtureDir = path.resolve(

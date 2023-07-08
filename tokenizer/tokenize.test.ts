@@ -1,4 +1,4 @@
-import { assertSnapshot, it } from "./testUtils.ts";
+import { assertSnapshot, it } from "../utils/testUtils.ts";
 import { tokenize } from "./tokenize.ts";
 
 [

@@ -1,6 +1,6 @@
 import { performBetaReductionUntilDone } from "../beta/betaReduction.ts";
-import { parse } from "../parse.ts";
-import { assertEquals, describe, it } from "../testUtils.ts";
+import { parse } from "../parser/parse.ts";
+import { assertEquals, describe, it } from "../utils/testUtils.ts";
 import { BuiltinAliasesMap } from "./builtin.ts";
 import { unfoldAliases } from "./unfold.ts";
 

@@ -1,17 +1,17 @@
-import { Token } from "./tokenizer/types.ts";
-import { Stack } from "./parser/Stack.ts";
+import { Token } from "../tokenizer/types.ts";
+import { Stack } from "./Stack.ts";
 import {
   ParenthesisNotClosedError,
   UnexpectedTokenError,
-} from "./parser/errors.ts";
+} from "./errors.ts";
 import {
   AbstractionNode,
   ApplicationNode,
   Node,
   VariableNode,
-} from "./parser/types.ts";
-import { tokenize } from "./tokenize.ts";
-import { PartialNode } from "./parser/PartialNode.ts";
+} from "./types.ts";
+import { tokenize } from "../tokenizer/tokenize.ts";
+import { PartialNode } from "./PartialNode.ts";
 
 export function parse(code: string): Node {
   const tokens = tokenize(code, { eofToken: true });

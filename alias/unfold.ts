@@ -1,5 +1,5 @@
 import { Node } from "../parser/types.ts";
-import { assertNever } from "../utils.ts";
+import { assertNever } from "../utils/utils.ts";
 import { ExpressionAlias } from "./alias.ts";
 
 /**

@@ -3,9 +3,9 @@ import { BuiltinAliasesMap } from "../alias/builtin.ts";
 import { unfoldAliases } from "../alias/unfold.ts";
 import { isAlphaEquivalent } from "../alpha/alphaEquivalence.ts";
 import { performBetaReductionUntilDone } from "../beta/betaReduction.ts";
-import { parse } from "../parse.ts";
-import { stringify } from "../stringify.ts";
-import { assertNever } from "../utils.ts";
+import { parse } from "../parser/parse.ts";
+import { stringify } from "../parser/stringify.ts";
+import { assertNever } from "../utils/utils.ts";
 import { UnsupportedRightHandSideCommandError } from "./errors.ts";
 import { parseCommand } from "./parseCommand.ts";
 import {

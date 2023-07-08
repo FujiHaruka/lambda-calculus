@@ -1,8 +1,8 @@
-import { TokenizerContext } from "./tokenizer/TokenizerContext.ts";
-import { Token } from "./tokenizer/types.ts";
-import { scanSymbol } from "./tokenizer/scanSymbol.ts";
-import { scanVar } from "./tokenizer/scanVar.ts";
-import { UnexpectedCharacterError } from "./tokenizer/errors.ts";
+import { TokenizerContext } from "./TokenizerContext.ts";
+import { Token } from "./types.ts";
+import { scanSymbol } from "./scanSymbol.ts";
+import { scanVar } from "./scanVar.ts";
+import { UnexpectedCharacterError } from "./errors.ts";
 
 function scan(ctx: TokenizerContext): Token | null {
   return scanSymbol(ctx) || scanVar(ctx);

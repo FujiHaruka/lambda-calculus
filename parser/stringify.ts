@@ -1,5 +1,5 @@
-import { Node } from "./parser/types.ts";
-import { assertNever } from "./utils.ts";
+import { Node } from "./types.ts";
+import { assertNever } from "../utils/utils.ts";
 
 /**
  * Convert AST to code string

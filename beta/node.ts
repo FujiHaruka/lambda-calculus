@@ -1,5 +1,5 @@
 import { Node, NodeType } from "../parser/types.ts";
-import { assertNever } from "../utils.ts";
+import { assertNever } from "../utils/utils.ts";
 import { UnexpectedNodeTypeError } from "./errors.ts";
 import { BetaReducibleNode, NodePath } from "./types.ts";
 

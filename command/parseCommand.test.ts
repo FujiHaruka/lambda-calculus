@@ -1,4 +1,4 @@
-import { assertEquals, assertThrows, it } from "../testUtils.ts";
+import { assertEquals, assertThrows, it } from "../utils/testUtils.ts";
 import {
   CommandArgumentExpectedError,
   CommandArgumentUnexpectedError,

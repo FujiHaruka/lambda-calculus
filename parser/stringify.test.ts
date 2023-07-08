@@ -1,6 +1,6 @@
-import { Node } from "./parser/types.ts";
+import { Node } from "./types.ts";
 import { stringify } from "./stringify.ts";
-import { assertEquals, it } from "./testUtils.ts";
+import { assertEquals, it } from "../utils/testUtils.ts";
 
 const cases: {
   code: string;

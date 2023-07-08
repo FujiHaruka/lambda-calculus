@@ -1,5 +1,5 @@
 import { UnexpectedTokenError } from "./errors.ts";
-import { assertStringIncludes, describe, it } from "../testUtils.ts";
+import { assertStringIncludes, describe, it } from "../utils/testUtils.ts";
 import { Token } from "../tokenizer/types.ts";
 
 describe("UnexpectedTokenError", () => {

@@ -1,4 +1,4 @@
-import { parse } from "../parse.ts";
+import { parse } from "../parser/parse.ts";
 import type { Node } from "../parser/types.ts";
 import { PlainExpressionAlias } from "./types.ts";
 
