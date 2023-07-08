@@ -320,9 +320,27 @@ export function parse(code: string): Node {
       ) {
         nextNode.setChild(childNode);
         nextNode.rightParen = true;
-        stack.push(nextNode);
       } else {
         throw new UnexpectedTokenError({ token, code });
+      }
+
+      const anyNode = stack.top();
+      if (
+        anyNode &&
+        anyNode.type === "any" &&
+        !anyNode.hasChild()
+      ) {
+        stack.pop();
+        stack.push(
+          new PartialNode({
+            type: "application",
+            left: nextNode.toNode(),
+          }, {
+            leftParen: anyNode.leftParen,
+          }),
+        );
+      } else {
+        stack.push(nextNode);
       }
     } else if (
       // e.g.

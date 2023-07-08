@@ -1075,3 +1075,54 @@ snapshot[`parse "(x -> y z w)" 1`] = `
   type: "abstraction",
 }
 `;
+
+snapshot[`parse "((x -> y -> z) s)" 1`] = `
+{
+  left: {
+    body: {
+      body: {
+        identifier: "z",
+        type: "var",
+      },
+      bound: "y",
+      type: "abstraction",
+    },
+    bound: "x",
+    type: "abstraction",
+  },
+  right: {
+    identifier: "s",
+    type: "var",
+  },
+  type: "application",
+}
+`;
+
+snapshot[`parse "((x -> y -> z) s) t" 1`] = `
+{
+  left: {
+    left: {
+      body: {
+        body: {
+          identifier: "z",
+          type: "var",
+        },
+        bound: "y",
+        type: "abstraction",
+      },
+      bound: "x",
+      type: "abstraction",
+    },
+    right: {
+      identifier: "s",
+      type: "var",
+    },
+    type: "application",
+  },
+  right: {
+    identifier: "t",
+    type: "var",
+  },
+  type: "application",
+}
+`;
