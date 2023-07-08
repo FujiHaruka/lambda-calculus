@@ -1,5 +1,6 @@
 import { parse } from "./parse.ts";
 import { assertSnapshot, assertThrows, it } from "../utils/testUtils.ts";
+import { ParenthesisNotClosedError, UnexpectedTokenError } from "./errors.ts";
 
 [
   // Single variable.
@@ -70,7 +71,7 @@ import { assertSnapshot, assertThrows, it } from "../utils/testUtils.ts";
   "x (y z))",
 ].forEach((code) => {
   it(`throws UnexpectedTokenError for "${code}"`, () => {
-    assertThrows(() => parse(code));
+    assertThrows(() => parse(code), UnexpectedTokenError);
   });
 });
 
@@ -80,6 +81,6 @@ import { assertSnapshot, assertThrows, it } from "../utils/testUtils.ts";
   "((x y) z",
 ].forEach((code) => {
   it(`throws ParenthesisNotClosedError for "${code}"`, () => {
-    assertThrows(() => parse(code));
+    assertThrows(() => parse(code), ParenthesisNotClosedError);
   });
 });
