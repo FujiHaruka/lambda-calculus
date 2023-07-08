@@ -1,4 +1,9 @@
-import { assertEquals, assertThrows, describe, it } from "../utils/testUtils.ts";
+import {
+  assertEquals,
+  assertThrows,
+  describe,
+  it,
+} from "../utils/testUtils.ts";
 import { TokenizerContext } from "./TokenizerContext.ts";
 import { Token } from "./types.ts";
 

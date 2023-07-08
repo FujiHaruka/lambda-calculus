@@ -1,7 +1,12 @@
 import { parse } from "../parser/parse.ts";
 import { AbstractionNode } from "../parser/types.ts";
 import { stringify } from "../parser/stringify.ts";
-import { assertEquals, assertThrows, describe, it } from "../utils/testUtils.ts";
+import {
+  assertEquals,
+  assertThrows,
+  describe,
+  it,
+} from "../utils/testUtils.ts";
 import { performAlphaConvertion } from "./alphaConversion.ts";
 
 describe(performAlphaConvertion.name, () => {

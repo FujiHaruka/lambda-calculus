@@ -1,6 +1,11 @@
 import { parse } from "../parser/parse.ts";
 import { stringify } from "../parser/stringify.ts";
-import { assertEquals, assertThrows, describe, it } from "../utils/testUtils.ts";
+import {
+  assertEquals,
+  assertThrows,
+  describe,
+  it,
+} from "../utils/testUtils.ts";
 import {
   performBetaReduction,
   performBetaReductionToRedex,

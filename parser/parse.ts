@@ -1,9 +1,6 @@
 import { Token } from "../tokenizer/types.ts";
 import { Stack } from "./Stack.ts";
-import {
-  ParenthesisNotClosedError,
-  UnexpectedTokenError,
-} from "./errors.ts";
+import { ParenthesisNotClosedError, UnexpectedTokenError } from "./errors.ts";
 import {
   AbstractionNode,
   ApplicationNode,

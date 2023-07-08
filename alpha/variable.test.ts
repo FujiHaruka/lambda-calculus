@@ -1,5 +1,10 @@
 import { parse } from "../parser/parse.ts";
-import { assertEquals, assertThrows, describe, it } from "../utils/testUtils.ts";
+import {
+  assertEquals,
+  assertThrows,
+  describe,
+  it,
+} from "../utils/testUtils.ts";
 import { UnsupportedSubstitutionError } from "./errors.ts";
 import {
   collectBoundVariables,

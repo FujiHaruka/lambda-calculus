@@ -1,5 +1,10 @@
 import { ExpressionAlias } from "./alias.ts";
-import { assertEquals, assertThrows, describe, it } from "../utils/testUtils.ts";
+import {
+  assertEquals,
+  assertThrows,
+  describe,
+  it,
+} from "../utils/testUtils.ts";
 import { parse } from "../parser/parse.ts";
 
 describe(ExpressionAlias.name, () => {
