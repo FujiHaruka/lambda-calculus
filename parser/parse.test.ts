@@ -51,9 +51,10 @@ import { ParenthesisNotClosedError, UnexpectedTokenError } from "./errors.ts";
   "x -> y z w",
   "x -> y (z w)",
   "x -> (y z) w",
-  // "(x -> y z)",
-  // "((x -> y -> z) s)"
-  // "((x -> y -> z) s) t",
+  "(x -> y z)",
+  "(x -> y z w)",
+  "((x -> y -> z) s)",
+  "((x -> y -> z) s) t",
 ].forEach((code) => {
   it(`parse "${code}"`, async (t) => {
     await assertSnapshot(t, parse(code));

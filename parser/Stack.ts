@@ -1,6 +1,10 @@
 export class Stack<T> {
   #items: T[] = [];
 
+  get size(): number {
+    return this.#items.length;
+  }
+
   empty(): boolean {
     return this.#items.length === 0;
   }

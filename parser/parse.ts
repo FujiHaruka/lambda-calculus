@@ -290,12 +290,13 @@ export function parse(code: string): Node {
       // e.g.
       // "(a -> b -> c" + ")"
       // "(a -> b -> c -> d" + ")"
+      // "(x -> y z" + ")"
       token.type === "right_paren" &&
       node &&
-      node.type === "abstraction" &&
-      node.isComplete()
+      node.isComplete() &&
+      stack.size >= 2
     ) {
-      let childNode = node.toNode() as AbstractionNode;
+      let childNode = node.toNode();
       stack.pop();
 
       const top = stack.top();
@@ -306,7 +307,7 @@ export function parse(code: string): Node {
         !top.leftParen
       ) {
         top.setChild(childNode);
-        childNode = top.toNode() as AbstractionNode;
+        childNode = top.toNode();
         stack.pop();
       }
 

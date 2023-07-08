@@ -1032,3 +1032,46 @@ snapshot[`parse "x -> (y z) w" 1`] = `
   type: "abstraction",
 }
 `;
+
+snapshot[`parse "(x -> y z)" 1`] = `
+{
+  body: {
+    left: {
+      identifier: "y",
+      type: "var",
+    },
+    right: {
+      identifier: "z",
+      type: "var",
+    },
+    type: "application",
+  },
+  bound: "x",
+  type: "abstraction",
+}
+`;
+
+snapshot[`parse "(x -> y z w)" 1`] = `
+{
+  body: {
+    left: {
+      left: {
+        identifier: "y",
+        type: "var",
+      },
+      right: {
+        identifier: "z",
+        type: "var",
+      },
+      type: "application",
+    },
+    right: {
+      identifier: "w",
+      type: "var",
+    },
+    type: "application",
+  },
+  bound: "x",
+  type: "abstraction",
+}
+`;
