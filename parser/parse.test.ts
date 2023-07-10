@@ -1,6 +1,12 @@
 import { parse } from "./parse.ts";
-import { assertSnapshot, assertThrows, it } from "../utils/testUtils.ts";
+import {
+  assertEquals,
+  assertSnapshot,
+  assertThrows,
+  it,
+} from "../utils/testUtils.ts";
 import { ParenthesisNotClosedError, UnexpectedTokenError } from "./errors.ts";
+import { stringify } from "./stringify.ts";
 
 [
   // Single variable.
@@ -64,6 +70,11 @@ import { ParenthesisNotClosedError, UnexpectedTokenError } from "./errors.ts";
 ].forEach((code) => {
   it(`parse "${code}"`, async (t) => {
     await assertSnapshot(t, parse(code));
+  });
+
+  it(`stringify ∘ parse is idempotent for "${code}"`, () => {
+    const format = (exp: string): string => stringify(parse(exp));
+    assertEquals(format(code), format(format(code)));
   });
 });
 
