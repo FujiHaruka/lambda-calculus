@@ -1126,3 +1126,134 @@ snapshot[`parse "((x -> y -> z) s) t" 1`] = `
   type: "application",
 }
 `;
+
+snapshot[`parse "p (t -> f -> f)" 1`] = `
+{
+  left: {
+    identifier: "p",
+    type: "var",
+  },
+  right: {
+    body: {
+      body: {
+        identifier: "f",
+        type: "var",
+      },
+      bound: "f",
+      type: "abstraction",
+    },
+    bound: "t",
+    type: "abstraction",
+  },
+  type: "application",
+}
+`;
+
+snapshot[`parse "(p (t -> f -> f))" 1`] = `
+{
+  left: {
+    identifier: "p",
+    type: "var",
+  },
+  right: {
+    body: {
+      body: {
+        identifier: "f",
+        type: "var",
+      },
+      bound: "f",
+      type: "abstraction",
+    },
+    bound: "t",
+    type: "abstraction",
+  },
+  type: "application",
+}
+`;
+
+snapshot[`parse "p -> (p (t -> f -> f))" 1`] = `
+{
+  body: {
+    left: {
+      identifier: "p",
+      type: "var",
+    },
+    right: {
+      body: {
+        body: {
+          identifier: "f",
+          type: "var",
+        },
+        bound: "f",
+        type: "abstraction",
+      },
+      bound: "t",
+      type: "abstraction",
+    },
+    type: "application",
+  },
+  bound: "p",
+  type: "abstraction",
+}
+`;
+
+snapshot[`parse "p -> (p (t -> f -> f)) (t -> f -> t)" 1`] = `
+{
+  body: {
+    body: {
+      identifier: "t",
+      type: "var",
+    },
+    bound: "f",
+    type: "abstraction",
+  },
+  bound: "t",
+  type: "abstraction",
+}
+`;
+
+snapshot[`parse "x -> (x y) (x y) (x y)" 1`] = `
+{
+  body: {
+    left: {
+      left: {
+        left: {
+          identifier: "x",
+          type: "var",
+        },
+        right: {
+          identifier: "y",
+          type: "var",
+        },
+        type: "application",
+      },
+      right: {
+        left: {
+          identifier: "x",
+          type: "var",
+        },
+        right: {
+          identifier: "y",
+          type: "var",
+        },
+        type: "application",
+      },
+      type: "application",
+    },
+    right: {
+      left: {
+        identifier: "x",
+        type: "var",
+      },
+      right: {
+        identifier: "y",
+        type: "var",
+      },
+      type: "application",
+    },
+    type: "application",
+  },
+  bound: "x",
+  type: "abstraction",
+}
+`;

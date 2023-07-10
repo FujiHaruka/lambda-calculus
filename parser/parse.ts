@@ -327,14 +327,25 @@ export function parse(code: string): Node {
       const anyNode = stack.top();
       if (
         anyNode &&
-        anyNode.type === "any" &&
-        !anyNode.hasChild()
+        anyNode.type === "any"
       ) {
         stack.pop();
+        const children = anyNode.hasChild()
+          // e.g.
+          // "p (t -> f -> f" + ")"
+          ? {
+            left: anyNode.child!,
+            right: nextNode.toNode(),
+          }
+          // e.g.
+          // "((x -> y -> z" + ")
+          : {
+            left: nextNode.toNode(),
+          };
         stack.push(
           new PartialNode({
             type: "application",
-            left: nextNode.toNode(),
+            ...children,
           }, {
             leftParen: anyNode.leftParen,
           }),
