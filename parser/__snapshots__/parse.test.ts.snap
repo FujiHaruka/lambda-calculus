@@ -1197,17 +1197,77 @@ snapshot[`parse "p -> (p (t -> f -> f))" 1`] = `
 }
 `;
 
+snapshot[`parse "p -> (t -> f -> f) (t -> f -> f)" 1`] = `
+{
+  body: {
+    left: {
+      body: {
+        body: {
+          identifier: "f",
+          type: "var",
+        },
+        bound: "f",
+        type: "abstraction",
+      },
+      bound: "t",
+      type: "abstraction",
+    },
+    right: {
+      body: {
+        body: {
+          identifier: "f",
+          type: "var",
+        },
+        bound: "f",
+        type: "abstraction",
+      },
+      bound: "t",
+      type: "abstraction",
+    },
+    type: "application",
+  },
+  bound: "p",
+  type: "abstraction",
+}
+`;
+
 snapshot[`parse "p -> (p (t -> f -> f)) (t -> f -> t)" 1`] = `
 {
   body: {
-    body: {
-      identifier: "t",
-      type: "var",
+    left: {
+      left: {
+        identifier: "p",
+        type: "var",
+      },
+      right: {
+        body: {
+          body: {
+            identifier: "f",
+            type: "var",
+          },
+          bound: "f",
+          type: "abstraction",
+        },
+        bound: "t",
+        type: "abstraction",
+      },
+      type: "application",
     },
-    bound: "f",
-    type: "abstraction",
+    right: {
+      body: {
+        body: {
+          identifier: "t",
+          type: "var",
+        },
+        bound: "f",
+        type: "abstraction",
+      },
+      bound: "t",
+      type: "abstraction",
+    },
+    type: "application",
   },
-  bound: "t",
+  bound: "p",
   type: "abstraction",
 }
 `;

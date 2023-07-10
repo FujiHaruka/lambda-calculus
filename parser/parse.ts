@@ -324,17 +324,17 @@ export function parse(code: string): Node {
         throw new UnexpectedTokenError({ token, code });
       }
 
-      const anyNode = stack.top();
+      const someNode = stack.top();
       if (
-        anyNode &&
-        anyNode.type === "any"
+        someNode &&
+        someNode.type === "any"
       ) {
         stack.pop();
-        const children = anyNode.hasChild()
+        const children = someNode.hasChild()
           // e.g.
           // "p (t -> f -> f" + ")"
           ? {
-            left: anyNode.child!,
+            left: someNode.child!,
             right: nextNode.toNode(),
           }
           // e.g.
@@ -347,9 +347,35 @@ export function parse(code: string): Node {
             type: "application",
             ...children,
           }, {
-            leftParen: anyNode.leftParen,
+            leftParen: someNode.leftParen,
           }),
         );
+      } else if (
+        someNode &&
+        someNode.type === "abstraction" &&
+        someNode.hasChild()
+      ) {
+        const abstractionNode = someNode.toNode() as AbstractionNode;
+        stack.pop();
+        stack.push(
+          new PartialNode({
+            type: "abstraction",
+            bound: abstractionNode.bound,
+            body: {
+              type: "application",
+              left: abstractionNode.body,
+              right: nextNode.toNode(),
+            },
+          }, {
+            leftParen: someNode.leftParen,
+          }),
+        );
+      } else if (
+        someNode &&
+        someNode.type === "abstraction" &&
+        !someNode.hasChild()
+      ) {
+        someNode.setChild(nextNode.toNode());
       } else {
         stack.push(nextNode);
       }
@@ -425,6 +451,10 @@ export function parse(code: string): Node {
       node &&
       node.isComplete()
     ) {
+      stack.pop();
+      if (stack.size > 1) {
+        throw new Error("Unexpected parser error");
+      }
       return node.toNode();
     } else if (
       // e.g.

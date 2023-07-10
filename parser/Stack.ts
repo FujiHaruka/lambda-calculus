@@ -26,7 +26,7 @@ export class Stack<T> {
     this.#items.push(item);
   }
 
-  bump(): T[] {
+  dump(): T[] {
     return [...this.#items];
   }
 }

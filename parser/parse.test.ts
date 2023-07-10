@@ -64,7 +64,7 @@ import { stringify } from "./stringify.ts";
   "p (t -> f -> f)",
   "(p (t -> f -> f))",
   "p -> (p (t -> f -> f))",
-  // FIXME
+  "p -> (t -> f -> f) (t -> f -> f)",
   "p -> (p (t -> f -> f)) (t -> f -> t)",
   "x -> (x y) (x y) (x y)",
 ].forEach((code) => {
