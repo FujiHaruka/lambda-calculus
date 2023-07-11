@@ -10,7 +10,8 @@ if (Deno.args.length === 0) {
   } else {
     try {
       const file = await Deno.readTextFile(arg);
-      executeFile(file);
+      const exitCode = executeFile(file);
+      Deno.exit(exitCode);
     } catch (err) {
       if (!(err instanceof Error)) {
         throw err;

@@ -1,9 +1,10 @@
+import { color } from "../deps.ts";
 import { Repl } from "./repl.ts";
 
 export function executeFile(
   script: string,
   print: (str: string) => void = console.log,
-): void {
+): number {
   const repl = new Repl();
 
   const lines = script.split("\n")
@@ -16,5 +17,9 @@ export function executeFile(
     if (out) {
       print(out);
     }
+    if (out.startsWith(color.red("Error"))) {
+      return 1;
+    }
   }
+  return 0;
 }

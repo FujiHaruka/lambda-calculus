@@ -1,5 +1,17 @@
 export const snapshot = {};
 
+snapshot[`executes error.lambda 1`] = `
+[
+  "> # Error: Unexpected token",
+  "> a -> -> b",
+  "\\x1b[31mError\\x1b[39m: Unexpected token at position 5:
+
+  a -> -> b
+       ~~
+",
+]
+`;
+
 snapshot[`executes number.lambda 1`] = `
 [
   "> \$x = REDUCE \$IS_ZERO \$0",

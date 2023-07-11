@@ -1,0 +1,5 @@
+# Error: Unexpected token
+a -> -> b
+
+# Stop executing the file
+# Don't reach here

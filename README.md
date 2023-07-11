@@ -124,6 +124,8 @@ To view all available built-in aliases, simply use the `LIST` command:
 > LIST
 ```
 
-For more examples, feel free to explore [fixtures/](https://github.com/FujiHaruka/lambda-calculus/tree/main/fixtures). These built-in
-aliases not only make common lambda calculus operations more convenient but also
-allow you to focus on more complex concepts and computations.
+For more examples, feel free to explore
+[fixtures/](https://github.com/FujiHaruka/lambda-calculus/tree/main/fixtures).
+These built-in aliases not only make common lambda calculus operations more
+convenient but also allow you to focus on more complex concepts and
+computations.
