@@ -12,7 +12,7 @@ This tool requires [Deno](https://deno.land/) as its runtime environment.
 You can install the tool using the following command.
 
 ```
-$ deno install -n lambda https://deno.land/x/lambda-calculus
+$ deno install -n lambda https://deno.land/x/lambdacalculus/cli.ts
 ```
 
 ## Usage
