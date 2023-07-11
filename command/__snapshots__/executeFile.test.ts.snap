@@ -255,6 +255,138 @@ f",
   "> REDUCE \$y f",
   "((x -> y) f)
 y",
+  "> # Show all available built-in aliases",
+  "> LIST",
+  "Builtin aliases
+" +
+    "===============
+" +
+    "\\x1b[1m\$TRUE\\x1b[22m = t -> (f -> t)
+" +
+    "
+" +
+    "\\x1b[1m\$FALSE\\x1b[22m = t -> (f -> f)
+" +
+    "
+" +
+    "\\x1b[1m\$AND\\x1b[22m = p -> (q -> (p q \$FALSE))
+" +
+    "usage  : \$AND <boolean> <boolean>
+" +
+    "example: REDUCE \$AND \$TRUE \$FALSE
+" +
+    "
+" +
+    "\\x1b[1m\$OR\\x1b[22m = p -> (q -> (p \$TRUE q))
+" +
+    "usage  : \$OR <boolean> <boolean>
+" +
+    "example: REDUCE \$OR \$TRUE \$FALSE
+" +
+    "
+" +
+    "\\x1b[1m\$NOT\\x1b[22m = p -> (p \$FALSE \$TRUE)
+" +
+    "usage  : \$NOT <boolean>
+" +
+    "example: REDUCE \$NOT \$TRUE
+" +
+    "
+" +
+    "\\x1b[1m\$IF\\x1b[22m = p -> (a -> (b -> (p a b)))
+" +
+    "usage  : \$IF <boolean> <expression> <expression>
+" +
+    "example: REDUCE \$IF \$TRUE x y
+" +
+    "
+" +
+    "\\x1b[1m\$0\\x1b[22m = s -> (z -> z)
+" +
+    "
+" +
+    "\\x1b[1m\$1\\x1b[22m = s -> (z -> (s z))
+" +
+    "
+" +
+    "\\x1b[1m\$2\\x1b[22m = s -> (z -> (s (s z)))
+" +
+    "
+" +
+    "\\x1b[1m\$3\\x1b[22m = s -> (z -> (s (s (s z))))
+" +
+    "
+" +
+    "\\x1b[1m\$4\\x1b[22m = s -> (z -> (s (s (s (s z)))))
+" +
+    "
+" +
+    "\\x1b[1m\$5\\x1b[22m = s -> (z -> (s (s (s (s (s z))))))
+" +
+    "
+" +
+    "\\x1b[1m\$6\\x1b[22m = s -> (z -> (s (s (s (s (s (s z)))))))
+" +
+    "
+" +
+    "\\x1b[1m\$7\\x1b[22m = s -> (z -> (s (s (s (s (s (s (s z))))))))
+" +
+    "
+" +
+    "\\x1b[1m\$8\\x1b[22m = s -> (z -> (s (s (s (s (s (s (s (s z)))))))))
+" +
+    "
+" +
+    "\\x1b[1m\$9\\x1b[22m = s -> (z -> (s (s (s (s (s (s (s (s (s z))))))))))
+" +
+    "
+" +
+    "\\x1b[1m\$IS_ZERO\\x1b[22m = n -> (n (k -> \$FALSE) \$TRUE)
+" +
+    "usage  : \$IS_ZERO <number>
+" +
+    "example: REDUCE \$IS_ZERO \$0
+" +
+    "
+" +
+    "\\x1b[1m\$SUCC\\x1b[22m = n -> (s -> (z -> (s (n s z))))
+" +
+    "usage  : \$SUCC <number>
+" +
+    "example: REDUCE \$SUCC \$0
+" +
+    "
+" +
+    "\\x1b[1m\$PLUS\\x1b[22m = m -> (n -> (s -> (z -> (m s (n s z)))))
+" +
+    "usage  : \$PLUS <number> <number>
+" +
+    "example: REDUCE \$PLUS \$1 \$2
+" +
+    "
+" +
+    "\\x1b[1m\$MULT\\x1b[22m = m -> (n -> (n (\$PLUS m) \$0))
+" +
+    "usage  : \$MULT <number> <number>
+" +
+    "example: REDUCE \$MULT \$2 \$3
+" +
+    "
+" +
+    "\\x1b[1m\$PRED\\x1b[22m = n -> f -> x -> (n (g -> (h -> (h (g f)))) (u -> x) (u -> u))
+" +
+    "usage  : \$PRED <number>
+" +
+    "example: REDUCE \$PRED \$2
+" +
+    "
+" +
+    "\\x1b[1m\$SUB\\x1b[22m = m -> (n -> ((n \$PRED) m))
+" +
+    "usage  : \$SUB <number> <number>
+" +
+    "example: REDUCE \$SUB \$3 \$2
+",
 ]
 `;
 

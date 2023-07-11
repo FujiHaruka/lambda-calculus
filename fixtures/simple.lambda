@@ -7,3 +7,6 @@ $y  = x -> y
 
 # Reduced to "y"
 REDUCE $y f
+
+# Show all available built-in aliases
+LIST
